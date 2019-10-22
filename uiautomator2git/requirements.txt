@@ -1,0 +1,4 @@
+pip install --pre -U uiautomator2
+pip  install --pre weditor
+
+python -m uiautomator2 init
