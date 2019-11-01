@@ -12,12 +12,13 @@ import time
 import unittest
 import uiautomator2 as u2
 
+from taobaoicon import TaoBao
 
 class TestWeditor(unittest.TestCase):
 
     @classmethod
     def setUpClass(self):
-        self.d = u2.connect_usb('emulator-5554')     # usb连接方式;adb devices 获取设备信息
+        self.d = u2.connect_usb('4d007003b2464067')     # usb连接方式;adb devices 获取设备信息
         # self.d = u2.connect('172.27.177.9')     # IP连接方式；adb devices 获取设备信息
         self.d.healthcheck()  # 检查并维持设备端守护进程处于运行状态
         # self.d.disable_popups(True)   # 允许自动处理弹出框 
@@ -91,11 +92,15 @@ class TestWeditor(unittest.TestCase):
         '刷宝短视频-签到'
         try:
             self.d(text='任务').click()
+            time.sleep(2)
             picname = time.strftime("%Y-%m-%d-%H%M%S", time.localtime())
             print(picname)
             self.d.screenshot(os.path.join('shuabao', picname+'.jpg')) 
             self.d(description='立即签到').click()
-            # time.sleep(2)
+            time.sleep(3)
+            self.d(description="看视频签到").click()    # 看视频签到
+            time.sleep(48)
+            self.d(resourceId="com.jm.video:id/iv_close").click()    #关闭
             self.d.screenshot(os.path.join('shuabao', '签到.jpg')) 
             # self.d(description='继续赚元宝').click()
             self.d.press('back')
@@ -110,31 +115,39 @@ class TestWeditor(unittest.TestCase):
         '刷宝短视频'
         self.d(text='首页').click()
         video_titles = []
-        for i in range(100000):
-        # while 1:
-       
+        while 1:
+            for i in range(10):
+            # while 1:
+        
+                try:
+                    self.d(resourceId="com.jm.video:id/mask_layer").drag_to(1, 1, duration=0.5)   # 向上拖拽，切换视频
+                    # self.d.swipe(1, 1, 0, 849)    #滑动
+                    title = self.d.xpath('//*[@resource-id="com.jm.video:id/desc"]').get_text()  # 获取视频title
+                    video_titles.append(title)
+                    print(video_titles)
+                    self.d.screenshot(os.path.join('shuabao', title+'.jpg'))
+                except:
+                    # video_titles.append('no tile')
+                    # self.d.screenshot(os.path.join('shuabao', 'notile'+str(i)+'.jpg'))
+                    print('获取视频出错，请检查')
+                    self.test_shuabao_basic()
+                    # self.test_shuabao_leidian()
+                time.sleep(63)
+                i = i+1
+                print(i)
             try:
-                self.d(resourceId="com.jm.video:id/mask_layer").drag_to(1, 1, duration=0.5)   # 向上拖拽，切换视频
-                # self.d.swipe(1, 1, 0, 849)    #滑动
-                title = self.d.xpath('//*[@resource-id="com.jm.video:id/desc"]').get_text()  # 获取视频title
-                video_titles.append(title)
-                print(video_titles)
-                self.d.screenshot(os.path.join('shuabao', title+'.jpg'))
+                TaoBao.test_d0_shop()    #领取淘宝喵币
             except:
-                # video_titles.append('no tile')
-                # self.d.screenshot(os.path.join('shuabao', 'notile'+str(i)+'.jpg'))
-                print('获取视频出错，请检查')
-                # self.test_shuabao_basic()
-                self.test_shuabao_leidian()
-            time.sleep(63)
-            i = i+1
-            print(i)
+                print('领取喵币失败')
+            finally:
+                time.sleep(3)
+                self.test_shuabao_basic()   # 再次刷宝
 
 if __name__ == '__main__':
     suit = unittest.TestSuite()
-    # suit.addTest(TestWeditor('test_shuabao_basic'))
-    suit.addTest(TestWeditor('test_shuabao_leidian'))
-    suit.addTest(TestWeditor('test_shuabao_task'))
+    suit.addTest(TestWeditor('test_shuabao_basic'))
+    # suit.addTest(TestWeditor('test_shuabao_leidian'))
+    # suit.addTest(TestWeditor('test_shuabao_task'))
     suit.addTest(TestWeditor('test_shuabao'))
     runner = unittest.TextTestRunner()
     runner.run(suit)
