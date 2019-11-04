@@ -11,6 +11,8 @@ import time
 import unittest
 import uiautomator2 as u2
 
+waittime = 22
+
 class TaoBao(unittest.TestCase):
 
     @classmethod
@@ -78,7 +80,7 @@ class TaoBao(unittest.TestCase):
                 # self.d.xpath('//*[@resource-id="taskBottomSheet"]/android.view.View[1]/android.view.View[8]/android.view.View[2]/android.view.View[3]').click()
                 # # 等待10S获取瞄币
                 # print('第一个店铺领取喵币')
-                # time.sleep(22)
+                # time.sleep(waittime)
                 # self.d(description="转到上一层级").click()
 
                 '第二个店铺领取喵币'
@@ -86,27 +88,27 @@ class TaoBao(unittest.TestCase):
                 self.d.xpath('//*[@resource-id="taskBottomSheet"]/android.view.View[1]/android.view.View[8]/android.view.View[3]/android.view.View[3]').click()
                 # 等待10S获取瞄币
                 print('第二个店铺领取喵币')
-                time.sleep(22)
+                time.sleep(waittime)
                 self.d(description="转到上一层级").click()
 
                 '第三个店铺领取'
                 self.d.xpath('//*[@resource-id="taskBottomSheet"]/android.view.View[1]/android.view.View[8]/android.view.View[4]/android.view.View[3]').click()
                 print('第三个店铺领取')
-                time.sleep(22)
+                time.sleep(waittime)
                 self.d(description="转到上一层级").click()
 
                 '第四个店铺领取'
                 # self.d.xpath('//*[@text="去浏览"]').click()
                 self.d.xpath('//*[@resource-id="taskBottomSheet"]/android.view.View[1]/android.view.View[8]/android.view.View[5]/android.view.View[3]').click()
                 print('第四个店铺领取')
-                time.sleep(22)
+                time.sleep(waittime)
                 self.d(description="转到上一层级").click()
 
                 '第五个店铺领取'
                 # self.d(text="去进店").click()
                 self.d.xpath('//*[@resource-id="taskBottomSheet"]/android.view.View[1]/android.view.View[8]/android.view.View[6]/android.view.View[3]').click()
                 print('第五个店铺领取')
-                time.sleep(22)
+                time.sleep(waittime)
                 self.d(description="转到上一层级").click()
                 time.sleep(3)
 
