@@ -52,11 +52,11 @@ class TaoBao(unittest.TestCase):
 
     @classmethod
     def test_d0_shop(self):
-        '领取上限1000个'
+        '领取上限15000个'
         self.setUpClass()
-        self.d(text="上限12000").click()
-        print('领取上限12000的喵币')
-        self.d.screenshot(os.path.join('taobao', '上限1200.jpg'))
+        self.d(text="上限15000").click()
+        print('领取上限15000的喵币')
+        self.d.screenshot(os.path.join('taobao', '上限1500.jpg'))
         time.sleep(4)
 
     def test_d1_shoplist(self):
