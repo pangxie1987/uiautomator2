@@ -114,9 +114,10 @@ class TestWeditor(unittest.TestCase):
     def test_shuabao(self):
         '刷宝短视频'
         self.d(text='首页').click()
-        video_titles = []
+        # video_titles = []
         while 1:
-            for i in range(10):
+            video_titles = []
+            for i in range(30):
             # while 1:
         
                 try:
@@ -132,11 +133,12 @@ class TestWeditor(unittest.TestCase):
                     print('获取视频出错，请检查')
                     self.test_shuabao_basic()
                     # self.test_shuabao_leidian()
-                time.sleep(63)
+                time.sleep(30)
                 i = i+1
                 print(i)
             try:
                 TaoBao.test_d0_shop()    #领取淘宝喵币
+                print('领取喵币成功')
             except:
                 print('领取喵币失败')
             finally:
