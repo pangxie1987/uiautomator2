@@ -23,7 +23,7 @@ class TaoBao(unittest.TestCase):
         # self.d.disable_popups(True)   # 允许自动处理弹出框 
         # self.d.disable_popups(False)  # 禁用自动跳过弹出窗口
         # self.d.toast.show("Hello world")    # 手机屏幕显示
-        # self.d.press("home") # 返回home页
+        self.d.press("home") # 返回home页
         self.d(resourceId="com.sec.android.app.launcher:id/home_allAppsIcon").wait(timeout=10.0)
         self.d(resourceId="com.sec.android.app.launcher:id/home_allAppsIcon").click()    # 从home进入应用程序
         self.d(text="手机淘宝").click()
@@ -75,14 +75,14 @@ class TaoBao(unittest.TestCase):
     def test_d2_shop(self):
         '第一个店铺领取喵币'
         for k in range (20):
-            for i in range(8):
-                # # 进入店铺
-                # self.d.xpath('//*[@resource-id="taskBottomSheet"]/android.view.View[1]/android.view.View[8]/android.view.View[2]/android.view.View[3]').click()
-                # # 等待10S获取瞄币
-                # print('第一个店铺领取喵币')
-                # time.sleep(waittime)
-                ## self.d(description="转到上一层级").click()
-                # self.d.press('back')
+            for i in range(20):
+                # 进入店铺
+                self.d.xpath('//*[@resource-id="taskBottomSheet"]/android.view.View[1]/android.view.View[8]/android.view.View[2]/android.view.View[3]').click()
+                # 等待10S获取瞄币
+                print('第一个店铺领取喵币')
+                time.sleep(waittime)
+                # self.d(description="转到上一层级").click()
+                self.d.press('back')
 
                 '第二个店铺领取喵币'
                 # 进入店铺
@@ -93,12 +93,12 @@ class TaoBao(unittest.TestCase):
                 # self.d(description="转到上一层级").click()
                 self.d.press('back')
 
-                # '第三个店铺领取'
-                # self.d.xpath('//*[@resource-id="taskBottomSheet"]/android.view.View[1]/android.view.View[8]/android.view.View[4]/android.view.View[3]').click()
-                # print('第三个店铺领取')
-                # time.sleep(waittime)
-                ## self.d(description="转到上一层级").click()
-                # self.d.press('back')
+                '第三个店铺领取'
+                self.d.xpath('//*[@resource-id="taskBottomSheet"]/android.view.View[1]/android.view.View[8]/android.view.View[4]/android.view.View[3]').click()
+                print('第三个店铺领取')
+                time.sleep(waittime)
+                # self.d(description="转到上一层级").click()
+                self.d.press('back')
 
                 '第四个店铺领取'
                 # self.d.xpath('//*[@text="去浏览"]').click()

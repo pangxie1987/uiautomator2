@@ -88,12 +88,18 @@ class TestWeditor(unittest.TestCase):
         self.d(text='首页').click()
         time.sleep(3)
 
+    def get_picname(self):
+        '获取截图名称'
+        picname = time.strftime("%Y-%m-%d-%H%M%S", time.localtime())
+        picname = picname+'.jpg'
+        return picname
+
     def test_shuabao_task(self):
         '刷宝短视频-签到'
         try:
             self.d(text='任务').click()
             time.sleep(2)
-            picname = time.strftime("%Y-%m-%d-%H%M%S", time.localtime())
+            picname = self.get_picname()
             print(picname)
             self.d.screenshot(os.path.join('shuabao', picname+'.jpg')) 
             self.d(description='立即签到').click()
@@ -110,6 +116,17 @@ class TestWeditor(unittest.TestCase):
         finally:
             self.d(text='首页').click()
 
+    def get_miaobi(self):
+        '淘宝喵币'
+        try:
+            TaoBao.test_d0_shop()    #领取淘宝喵币
+            print('领取喵币成功')
+        except:
+            print('领取喵币失败')
+        finally:
+            time.sleep(3)
+            self.test_shuabao_basic()   # 再次刷宝
+
 
     def test_shuabao(self):
         '刷宝短视频'
@@ -117,13 +134,15 @@ class TestWeditor(unittest.TestCase):
         # video_titles = []
         while 1:
             video_titles = []
-            for i in range(30):
-            # while 1:
-        
+            for i in range(20):
                 try:
                     self.d(resourceId="com.jm.video:id/mask_layer").drag_to(1, 1, duration=0.5)   # 向上拖拽，切换视频
                     # self.d.swipe(1, 1, 0, 849)    #滑动
-                    title = self.d.xpath('//*[@resource-id="com.jm.video:id/desc"]').get_text()  # 获取视频title
+                    try:
+                        title = self.d.xpath('//*[@resource-id="com.jm.video:id/desc"]').get_text()  # 获取视频title
+                    except:
+                        print('视频title获取出错')
+                        title = self.get_picname()
                     video_titles.append(title)
                     print(video_titles)
                     self.d.screenshot(os.path.join('shuabao', title+'.jpg'))
@@ -133,23 +152,16 @@ class TestWeditor(unittest.TestCase):
                     print('获取视频出错，请检查')
                     self.test_shuabao_basic()
                     # self.test_shuabao_leidian()
-                time.sleep(30)
+                time.sleep(3)
                 i = i+1
                 print(i)
-            try:
-                TaoBao.test_d0_shop()    #领取淘宝喵币
-                print('领取喵币成功')
-            except:
-                print('领取喵币失败')
-            finally:
-                time.sleep(3)
-                self.test_shuabao_basic()   # 再次刷宝
-
+            # self.get_miaobi()
+            
 if __name__ == '__main__':
     suit = unittest.TestSuite()
     suit.addTest(TestWeditor('test_shuabao_basic'))
     # suit.addTest(TestWeditor('test_shuabao_leidian'))
-    # suit.addTest(TestWeditor('test_shuabao_task'))
+    suit.addTest(TestWeditor('test_shuabao_task'))
     suit.addTest(TestWeditor('test_shuabao'))
     runner = unittest.TextTestRunner()
     runner.run(suit)
