@@ -127,6 +127,25 @@ class TestWeditor(unittest.TestCase):
             time.sleep(3)
             self.test_shuabao_basic()   # 再次刷宝
 
+    def test_get_100(self):
+        '领取每日100元宝'
+        try:
+            self.d(text='任务').click()
+            time.sleep(2)
+            picname = self.get_picname()
+            print(picname)
+            self.d.screenshot(os.path.join('shuabao', picname+'.jpg')) 
+            self.d(description="去观看 ").click()
+            time.sleep(48)
+            self.d(resourceId="com.jm.video:id/iv_close").click()    #关闭
+            self.d.screenshot(os.path.join('shuabao', '100.jpg'))
+            self.d(description="待领取 ").click()       #领取动作
+            print('领取每日100元宝成功：%s'%picname)
+        except:
+            print('领取每日100元宝失败')
+        finally:
+            self.d(text='首页').click()
+
 
     def test_shuabao(self):
         '刷宝短视频'
@@ -152,7 +171,7 @@ class TestWeditor(unittest.TestCase):
                     print('获取视频出错，请检查')
                     self.test_shuabao_basic()
                     # self.test_shuabao_leidian()
-                time.sleep(3)
+                time.sleep(33)
                 i = i+1
                 print(i)
             # self.get_miaobi()
@@ -161,8 +180,9 @@ if __name__ == '__main__':
     suit = unittest.TestSuite()
     suit.addTest(TestWeditor('test_shuabao_basic'))
     # suit.addTest(TestWeditor('test_shuabao_leidian'))
-    suit.addTest(TestWeditor('test_shuabao_task'))
-    suit.addTest(TestWeditor('test_shuabao'))
+    suit.addTest(TestWeditor('test_get_100'))
+    # suit.addTest(TestWeditor('test_shuabao_task'))
+    # suit.addTest(TestWeditor('test_shuabao'))
     runner = unittest.TextTestRunner()
     runner.run(suit)
     # unittest.main()
