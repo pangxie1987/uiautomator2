@@ -1,0 +1,3 @@
+https://gkcx.eol.cn/special
+
+通过接口获取该网站所有的专业及学校信息

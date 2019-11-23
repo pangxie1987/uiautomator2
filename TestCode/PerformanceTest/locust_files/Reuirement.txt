@@ -1,0 +1,8 @@
+locust是一个可扩展的，分布式的，性能测试的吗，开源的，Python编写的性能测试框架
+pip install locustio
+pip install pyzmq  分布式运行locust
+
+执行：
+locust -f locust_test.py --host=http:example.com(被测试主机的地址如：http://www.126.com)
+
+在本地打开http://localhost:8089/，可以看到Locust WEB页面
