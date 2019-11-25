@@ -6,6 +6,7 @@ https://mp.weixin.qq.com/s/WmZXm6rsMjN2wcVD6E5jQg
 import time
 import requests
 import re
+import json
 from bs4 import BeautifulSoup
 
 def zhihu():
@@ -332,5 +333,55 @@ def tieba():
 		print(title, link)
 		print('=='*20)
 
+def v2ex():
+	'V2EX	https://www.v2ex.com/'
+	vex_url = 'https://www.v2ex.com'
+	headers = {
+		"user-agent":"Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.87 Safari/537.36", 
+		"Cookie":""}
+	r = requests.get(url=vex_url,  headers=headers)
+	webcontent = r.text
+	#print(webcontent)
+	soup = BeautifulSoup(webcontent, "html.parser")
+	rank = soup.find("div", id="TopicsHot")
+	# print(rank)
+	content = rank.find_all("span", class_="item_hot_topic_title")
+	for news in content:
+		print(news)
+		
+		title = news.text
+		link = vex_url + news.a.attrs['href']
+		print(title, link)
+		print('=='*20)
+
+def tianya():
+	'天涯	https://bbs.tianya.cn/'
+	tianya_url = 'https://bbs.tianya.cn/api'
+	headers = {
+		"user-agent":"Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.87 Safari/537.36", 
+		"Cookie":""}
+	datas = {
+		'method':'bbs.ice.getHotArticleList',
+		'params.pageSize':'15',	#每次请求的数量（太长了r.text解析不了）
+		'params.pageNum':'1',
+		'var':'apiData',
+		'_r': 0.13344051421726943,
+		'_': 1574681639524
+	}
+	r = requests.get(url=tianya_url, params=datas,  headers=headers)
+	#webcontent = json.loads(r.text)
+	webcontent = r.text
+	webcontent = webcontent.replace('var apiData =', '')
+	webcontent = json.loads(webcontent)
+	content = webcontent['data']['rows']
+	print(content)
+	for news in content:
+		print(news)
+		title = news['title']
+		link = news['url']
+		print(title, link)
+		print('=='*50)
+
+
 if __name__ == '__main__':
-	tieba()
+	tianya()
