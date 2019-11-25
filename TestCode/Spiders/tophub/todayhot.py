@@ -311,5 +311,26 @@ def pojie52():
 		print(title, link)
 		print('=='*20)
 
+def tieba():
+	'贴吧热议榜http://tieba.baidu.com/hottopic/browse/topicList'
+	tieba_url = 'http://tieba.baidu.com/hottopic/browse/topicList'
+	headers = {
+		"user-agent":"Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.87 Safari/537.36", 
+		"Cookie":""}
+	datas = {'res_type':'1', 'red_tag':'v3370729790'}
+	r = requests.get(url=tieba_url, params=datas, headers=headers)
+	webcontent = r.text
+	#print(webcontent)
+	soup = BeautifulSoup(webcontent, "html.parser")
+	rank = soup.find("ul", class_="topic-top-list")
+	# print(rank)
+	content = rank.find_all("div", class_="topic-name")
+	for news in content:
+		#print(news)
+		title = news.text
+		link = news.a.attrs['href']
+		print(title, link)
+		print('=='*20)
+
 if __name__ == '__main__':
-	pojie52()
+	tieba()
