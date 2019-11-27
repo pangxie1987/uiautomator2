@@ -382,6 +382,42 @@ def tianya():
 		print(title, link)
 		print('=='*50)
 
+def zhide():
+	'什么值得买	https://post.smzdm.com/hot_1/'
+	zhide_url = 'https://post.smzdm.com/rank/json_more/'		# 今日热榜
+	headers = {
+		"user-agent":"Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.87 Safari/537.36", 
+		"Cookie":""}
+	datas = {'unit': 1	}
+	r = requests.get(url=zhide_url, params=datas,  headers=headers)
+	#webcontent = json.loads(r.text)
+	webcontent = r.json()['data']
+	for news in webcontent:
+		title = news['title']
+		content = news['content']
+		link = news['article_url']
+		print(title ,content, link)
+		print('=='*30)
+
+def rednotes():
+	'小红书	https://www.xiaohongshu.com/explore'
+	rednotes_url = 'https://www.xiaohongshu.com/fe_api/burdock/v2/homefeed/notes'		# 社区精选
+	headers = {
+		"user-agent": "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.87 Safari/537.36", 
+		"X-Sign": "X0170686b081eea3b1a4368cf9f7c2199"
+		}
+		
+	datas = {"pageSize":"20","oid":"recommend","page":"1"}
+	r = requests.get(url=rednotes_url, params=datas,  headers=headers)
+	#webcontent = json.loads(r.text)
+	webcontent = r.json()['data']
+	print(webcontent)
+	for news in webcontent:
+		title = news['title']
+		articleid = news['id']
+		link = "https://www.xiaohongshu.com/discovery/item/" + articleid
+		print(title, link)
+		print('=='*30)
 
 if __name__ == '__main__':
-	tianya()
+	rednotes()
