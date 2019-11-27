@@ -11,7 +11,7 @@ import pprint
 import time
 import unittest
 import uiautomator2 as u2
-
+import random
 from taobaoicon import TaoBao
 
 class TestWeditor(unittest.TestCase):
@@ -171,7 +171,7 @@ class TestWeditor(unittest.TestCase):
                     print('获取视频出错，请检查')
                     self.test_shuabao_basic()
                     # self.test_shuabao_leidian()
-                time.sleep(33)
+                time.sleep(30+random.randint(1,15))
                 i = i+1
                 print(i)
             # self.get_miaobi()
@@ -180,9 +180,9 @@ if __name__ == '__main__':
     suit = unittest.TestSuite()
     suit.addTest(TestWeditor('test_shuabao_basic'))
     # suit.addTest(TestWeditor('test_shuabao_leidian'))
-    suit.addTest(TestWeditor('test_get_100'))
-    # suit.addTest(TestWeditor('test_shuabao_task'))
-    # suit.addTest(TestWeditor('test_shuabao'))
+    #suit.addTest(TestWeditor('test_get_100'))
+    #suit.addTest(TestWeditor('test_shuabao_task'))
+    suit.addTest(TestWeditor('test_shuabao'))
     runner = unittest.TextTestRunner()
     runner.run(suit)
     # unittest.main()
