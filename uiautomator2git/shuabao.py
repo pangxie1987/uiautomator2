@@ -171,7 +171,7 @@ class TestWeditor(unittest.TestCase):
                     print('获取视频出错，请检查')
                     self.test_shuabao_basic()
                     # self.test_shuabao_leidian()
-                time.sleep(30+random.randint(1,15))
+                time.sleep(20+random.randint(1,35))
                 i = i+1
                 print(i)
             # self.get_miaobi()
