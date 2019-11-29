@@ -419,5 +419,160 @@ def rednotes():
 		print(title, link)
 		print('=='*30)
 
+def taobao():
+	'淘宝人气榜'
+
+def pinduoduo():
+	'拼多多实时热销榜https://youhui.pinduoduo.com/search/hot-product-landing'
+	pindd_url = 'https://youhui.pinduoduo.com/network/api/goods/top/list'		# 实时热销榜
+	headers = {
+		"user-agent": "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.87 Safari/537.36",
+		"content-type": "application/json; charset=UTF-8",
+		"cookie": "pi_uid=CiSQIV3fEkKwSgArayQGAg==; _nano_fp=Xpd8n0UoX0EqXpPqn9_SA9l1hMT3z25lW1VhYI3I"
+		}
+		
+	datas = {"pageNumber":1 ,"pageSize":50 ,"type":1}
+	r = requests.post(url=pindd_url, json=datas,  headers=headers)
+	#webcontent = json.loads(r.text)
+	webcontent = r.json()['result']['list']
+	# print(webcontent)
+	for news in webcontent:
+		print(news)
+		print('=='*30)
+
+def shuimu():
+	'水木社区十大热门话题	http://www.newsmth.net/nForum/#!mainpage'
+	shuimu_url = 'http://www.newsmth.net'
+	headers = {
+		"user-agent":"Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.87 Safari/537.36", 
+		"Cookie":""}
+	r = requests.get(url=shuimu_url+'/nForum/mainpage?ajax',  headers=headers)
+	webcontent = r.text
+	# print(webcontent)
+	soup = BeautifulSoup(webcontent, "html.parser")
+	rank = soup.find("div", id="top10")
+	# print(rank)
+	content = rank.find_all("div")
+	#print(content)
+	for news in content:
+		title = news.text
+		link = news.select('div > a')[1]['href']
+		link = shuimu_url + link
+		print(title, link)
+		print('=='*30)
+
+def zhihu_daily():
+	'知乎日报	https://daily.zhihu.com/'
+	zhihudaily_url = 'https://daily.zhihu.com'
+	headers = {
+		"user-agent":"Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.87 Safari/537.36", 
+		"Cookie":""}
+	r = requests.get(url=zhihudaily_url,  headers=headers)
+	webcontent = r.text
+	# print(webcontent)
+	soup = BeautifulSoup(webcontent, "html.parser")
+	rank = soup.find("div", class_="main-content-wrap")
+	print(rank)
+	content = rank.find_all("a", href = True)
+	for news in content:
+		print(news)
+		title = news.text
+		link = zhihudaily_url + news.get('href')
+		print(title, link)
+		print('--'*30)
+
+def baidu_zhidao_daily():
+	'百度知道日报	 https://zhidao.baidu.com/daily/'
+	# 返回网页乱码的处理  https://blog.csdn.net/ahua_c/article/details/80942726
+	zhidao_url = 'https://zhidao.baidu.com/daily/'
+	headers = {
+		"user-agent":"Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.87 Safari/537.36", 
+		"Cookie":""}
+	r = requests.get(url=zhidao_url,  headers=headers)
+	codestyle = requests.utils.get_encodings_from_content(r.text)[0]	#获取网页的实际编码格式
+	r.encoding = codestyle	# 指定正确的编码格式
+	#print(r.encoding)
+	webcontent = r.text
+	# print(webcontent)
+	soup = BeautifulSoup(webcontent, "html.parser")
+	rank = soup.find("ul", class_="daily-list")
+	#print(rank)
+	content = rank.find_all("div", class_="daily-cont-top")
+	for news in content:
+		#print(news)
+		news = news.select('div>h2>a')[0]
+		# print(news)
+		title = news.text
+		#title = title.decode('ISO-8859-1').encode('utf-8')
+		link = zhidao_url + news.get('href')
+		print(title, link)
+		print('--'*30)
+
+def kaiyan():
+	'开眼视频	https://www.kaiyanapp.com/'
+	kaiyan_url = 'https://baobab.kaiyanapp.com/api/v1/feed'		# 今日热榜
+	headers = {
+		"user-agent":"Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.87 Safari/537.36", 
+		"Cookie":""}
+	datas = {'udid': '3e7ee30c6fc0004a773dc33b0597b5732b145c04'	}
+	r = requests.get(url=kaiyan_url, params=datas,  headers=headers)
+	#webcontent = json.loads(r.text)
+	webcontent = r.json()['dailyList']
+	for datalist in webcontent:
+		#print(datalist)
+		for news in datalist['videoList']:
+			# print(news)
+			title = news['title']
+			content = news['description']
+			link = news['rawWebUrl']
+			print(title ,content, link)
+			print('=='*30)
+
+def woshipm():
+	'人人都是产品经理 	http://www.woshipm.com/'
+	woshipm_url = 'http://www.woshipm.com/__api/v1/browser/popular'		# 今日热榜
+	headers = {
+		"user-agent":"Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.87 Safari/537.36", 
+		"Cookie":""}
+	datas = {'paged': 4, 'action': 'laodpostphp'}
+	for i in range (10):
+		datas['paged'] = i
+		r = requests.get(url=woshipm_url, params=datas,  headers=headers)
+		webcontent = r.json()
+		if webcontent['success'] == 'true':
+			for datalist in webcontent['payload']:
+				print(datalist)
+				title = datalist['title']
+				link = datalist['permalink']
+				content = datalist['snipper']
+				print(title, link, content)
+				print('==='*30)
+		else:
+			break
+
+def xueqiu24():
+	'雪球7X24 	https://xueqiu.com/?category=livenews'
+	woshipm_url = 'https://xueqiu.com'		#7X24
+	headers = {
+		"user-agent":"Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.87 Safari/537.36", 
+		"Cookie":"aliyungf_tc=AQAAAPM1ekz2QwoAygj3Ovj65ln7kN6G; acw_tc=2760823215749884906861019e6fbc290e8904989db72b0e6746c4814fa0e7; xq_a_token=5e0d8a38cd3acbc3002589f46fc1572c302aa8a2; xqat=5e0d8a38cd3acbc3002589f46fc1572c302aa8a2; xq_r_token=670668eda313118d7214487d800c21ad0202e141; u=611574988489796; device_id=24700f9f1986800ab4fcc880530dd0ed; Hm_lvt_1db88642e346389874251b5a1eded6e3=1574988491; Hm_lpvt_1db88642e346389874251b5a1eded6e3=1574988685elastic-apm-traceparent: 00-e25cb674b24fd980279371db0b1597f7-860b31a5829440bb-01"
+		}
+	datas = {'since_id': '-1', 'max_id': '-1', 'count': '15', 'category':'-1'}
+	for i in range (10):
+		
+		r = requests.get(url=woshipm_url+'/v4/statuses/public_timeline_by_category.json', params=datas,  headers=headers)
+		webcontent = r.json()
+		print(webcontent)
+		datas['max_id'] = webcontent['next_max_id']
+		for contents in webcontent['list']:
+			article = json.loads(contents['data'])
+			print(article)
+			title = article['topic_desc']
+			link = woshipm_url + article['target']
+			content = article['description']
+			print(title, link, content)
+
+			print('==='*30)
+
 if __name__ == '__main__':
-	rednotes()
+	xueqiu24()
