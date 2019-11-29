@@ -550,29 +550,113 @@ def woshipm():
 		else:
 			break
 
-def xueqiu24():
-	'雪球7X24 	https://xueqiu.com/?category=livenews'
-	woshipm_url = 'https://xueqiu.com'		#7X24
+def xueqiu():
+	'雪球 	https://xueqiu.com/?category=livenews'
+	xueqiu_url = 'https://xueqiu.com'		#7X24
 	headers = {
 		"user-agent":"Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.87 Safari/537.36", 
 		"Cookie":"aliyungf_tc=AQAAAPM1ekz2QwoAygj3Ovj65ln7kN6G; acw_tc=2760823215749884906861019e6fbc290e8904989db72b0e6746c4814fa0e7; xq_a_token=5e0d8a38cd3acbc3002589f46fc1572c302aa8a2; xqat=5e0d8a38cd3acbc3002589f46fc1572c302aa8a2; xq_r_token=670668eda313118d7214487d800c21ad0202e141; u=611574988489796; device_id=24700f9f1986800ab4fcc880530dd0ed; Hm_lvt_1db88642e346389874251b5a1eded6e3=1574988491; Hm_lpvt_1db88642e346389874251b5a1eded6e3=1574988685elastic-apm-traceparent: 00-e25cb674b24fd980279371db0b1597f7-860b31a5829440bb-01"
 		}
 	datas = {'since_id': '-1', 'max_id': '-1', 'count': '15', 'category':'-1'}
+	'雪球推荐'
 	for i in range (10):
-		
-		r = requests.get(url=woshipm_url+'/v4/statuses/public_timeline_by_category.json', params=datas,  headers=headers)
+		r = requests.get(url=xueqiu_url+'/v4/statuses/public_timeline_by_category.json', params=datas,  headers=headers)
 		webcontent = r.json()
-		print(webcontent)
+		#print(webcontent)
 		datas['max_id'] = webcontent['next_max_id']
 		for contents in webcontent['list']:
 			article = json.loads(contents['data'])
-			print(article)
+			#print(article)
 			title = article['topic_desc']
-			link = woshipm_url + article['target']
+			link = xueqiu_url + article['target']
 			content = article['description']
 			print(title, link, content)
-
 			print('==='*30)
 
+	'雪球7X24'
+	datas['category'] = 6
+	for i in range (10):
+		
+		r = requests.get(url=xueqiu_url+'/v4/statuses/public_timeline_by_category.json', params=datas,  headers=headers)
+		webcontent = r.json()
+		#print(webcontent)
+		datas['max_id'] = webcontent['next_max_id']
+		for contents in webcontent['list']:
+			article = json.loads(contents['data'])
+			#print(article)
+			link = xueqiu_url + article['target']
+			content = article['text']
+			print(link, content)
+			print('==='*30)
+
+	'热股榜'
+	r = requests.get(url='https://stock.xueqiu.com/v5/stock/hot_stock/list.json', params={'size':10, '_type':10, 'type':10},  headers=headers)
+	webcontent = r.json()['data']['items']
+	for tikets in webcontent:
+		print(tikets)
+		print('*'*50)
+
+	'热门新闻'
+	data_hostnews = {'a':1, 'count':10, 'page':1, 'meigu':0, 'scope':'day', 'type':'news'}
+	r = requests.get(url=xueqiu_url+'/statuses/hots.json', params=data_hostnews,  headers=headers)
+	webcontent = r.json()
+	for news in webcontent:
+		title = news['title']
+		content = news['text']
+		print(title, content)
+		print('*'*50)
+
+	'热门公告'
+	data_notice = data_hostnews
+	data_notice['type'] = 'notice'
+	r = requests.get(url=xueqiu_url+'/statuses/hots.json', params=data_notice,  headers=headers)
+	webcontent = r.json()
+	for news in webcontent:
+		content = news['text']
+		print(content)
+		print('*'*50)
+
+def toutiao():
+	'今日头条 	https://www.toutiao.com/'
+	toutiao_url = 'https://www.toutiao.com/'		#7X24
+	headers = {
+		"user-agent":"Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.87 Safari/537.36", 
+		"Cookie":""
+		}
+	datas = {'min_behot_time':0,'category':'__all__','utm_source':'toutiao','widen':1,'tadrequire':'true','as':'A105DD9E208921E','cp':'5DE089C211BE3E1','_signature':'.IIYsgAgEBUNIF6vxpLc2PyCGKAAKFs'}
+	r = requests.get(url=toutiao_url+'api/pc/feed/', params=datas,  headers=headers)
+	webcontent = r.json()['data']
+	for news in webcontent:
+		title = news['title']
+		source = news['source']
+		content = news['abstract']
+		link = toutiao_url+'a'+news['item_id']
+		print(title, source, content, link)
+		print('*'*50)
+
+def guancha():
+	'观察者	https://www.guancha.cn/?s=dhshouye'
+	guancha_url = 'https://www.guancha.cn'
+	headers = {
+				"user-agent":"Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.87 Safari/537.36", 
+				"Cookie":""
+			  }
+	r = requests.get(url=guancha_url+'/?s=dhshouye', headers=headers)
+	codestyle = requests.utils.get_encodings_from_content(r.text)[0]	#获取网页的实际编码格式
+	r.encoding = codestyle	# 指定正确的编码格式
+	webcontent = r.text
+	# print(webcontent)
+	soup = BeautifulSoup(webcontent, "html.parser")
+	index_list = soup.find("ul", class_="Review-item")
+	# print(index_list)
+	content = index_list.find_all("h4", class_='module-title')
+	for news in content:
+		# print(news)
+		title = news.text
+		link = news.select('h4>a')[0].get('href')
+		link = guancha_url + link
+		print(title, link)
+		print('*'*50)
+
 if __name__ == '__main__':
-	xueqiu24()
+	guancha()
