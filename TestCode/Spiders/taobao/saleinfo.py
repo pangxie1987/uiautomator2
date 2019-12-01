@@ -45,12 +45,18 @@ def search_goods():
 	index_list = soup.find("div", id="J_ItemList")
 	# print(index_list)
 	content = index_list.find_all("div", class_='product-iWrap')
-	# print(content)
+	print(content)
 	for goods in content:
-		price = goods.select('div>p')[1].text
-		title = goods.select('div>p')[2].text
-		link = goods.select('div>p')[2]
-		link = link.select('p>a')[0].get('href')
+		productPrice = goods.find('p', class_='productPrice')
+		productTitle = goods.find('p', class_='productPrice')
+		# price = goods.select('div>p')[1].text
+		# title = goods.select('div>p')[2].text
+		# link = goods.select('div>p')[2]
+		#link = link.select('p>a')[0].get('href')
+		# link = 'https'+link
+		price = productPrice.text
+		title = goods.select('p>a')[0].text
+		link = goods.select('p>a')[0].get('href')
 		link = 'https'+link
 		print(goods)
 		print(title, price, link)
