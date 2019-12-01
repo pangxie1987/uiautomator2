@@ -658,5 +658,28 @@ def guancha():
 		print(title, link)
 		print('*'*50)
 
+def gaoqingla():
+	'中国高清网	http://gaoqing.la/'
+	gaoqing_url = 'http://gaoqing.la/'
+	headers = {
+				"user-agent":"Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.87 Safari/537.36", 
+				"Cookie":""
+			  }
+	r = requests.get(url=gaoqing_url, headers=headers)
+	codestyle = requests.utils.get_encodings_from_content(r.text)[0]	#获取网页的实际编码格式
+	r.encoding = codestyle	# 指定正确的编码格式
+	webcontent = r.text
+	# print(webcontent)
+	soup = BeautifulSoup(webcontent, "html.parser")
+	index_list = soup.find("ul", id="post_container")
+	# print(index_list)
+	content = index_list.find_all("div", class_='article')
+	for news in content:
+		#news = news.find('h2', href = True)
+		#print(news)
+		title = news.select('div>h2')[0].text
+		link = news.select('div>h2>a')[0].get('href')
+		print(title, link)
+
 if __name__ == '__main__':
-	guancha()
+	gaoqingla()
