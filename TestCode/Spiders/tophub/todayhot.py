@@ -7,6 +7,7 @@ import time
 import requests
 import re
 import json
+import re
 from bs4 import BeautifulSoup
 
 def zhihu():
@@ -681,5 +682,44 @@ def gaoqingla():
 		link = news.select('div>h2>a')[0].get('href')
 		print(title, link)
 
+def sina_sports():
+	'新浪体育-NBA技术统计 https://slamdunk.sports.sina.com.cn/player/rank#season_type=reg&item_type=average&item=points'
+	sina_nba_url = 'https://slamdunk.sports.sina.com.cn/api'		#7X24
+	headers = {
+		"user-agent":"Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.87 Safari/537.36", 
+		"Cookie":""
+		}
+	datas = {
+			'p':'radar',
+			'callback':'jQuery11130004012145345625218_1575247137004',
+			'p':'radar',
+			's':'leaders',
+			'a':'players_top',
+			'season':2019,
+			'season_type':'reg',
+			'item_type':'average',
+			'item':'points',
+			'order':1,
+			'_':1575247137005
+			}
+	r = requests.get(url=sina_nba_url, params=datas,  headers=headers)
+	webcontent = r.text
+	
+	pattern = re.compile('{"result":{"status".*}]}}}')
+	webcontent = pattern.search(webcontent)
+	webcontent = webcontent.group()
+	webcontent = json.loads(webcontent)
+	print(type(webcontent))
+	players = webcontent['result']['data']['players']
+	for player in players:
+		name = player['last_name']
+		score = player['score']
+		team = player['team_name']
+		print(player)
+		print(name, score, team)
+		print('*'*50)
+
+	#for news in webcontent:
+
 if __name__ == '__main__':
-	gaoqingla()
+	sina_sports()
