@@ -814,32 +814,98 @@ def sina_sports():
 	# 		print(teamdata)
 	# 	print('-'*50)
 
-	'本赛季常规赛数据之最_球员'
-	datas_playertop = {
-			'p':'radar',
-			'callback':'jQuery1113002749331082455897_1575418857475',
-			'p':'radar',
-			's':'leaders',
-			'a':'player_top',
-			'season_type': 'reg',
-			'_':1575247137005
+	# '本赛季常规赛数据之最_球员'
+	# datas_playertop = {
+	# 		'p':'radar',
+	# 		'callback':'jQuery1113002749331082455897_1575418857475',
+	# 		'p':'radar',
+	# 		's':'leaders',
+	# 		'a':'player_top',
+	# 		'season_type': 'reg',
+	# 		'_':1575247137005
+	# 		}
+	# r = requests.get(url=sina_nba_url, params=datas_playertop,  headers=headers)
+	# webcontent = r.text
+	# # print(webcontent)
+	# pattern = re.compile('{"result":{"status".*]}}}')
+	# webcontent = pattern.search(webcontent)
+	# webcontent = webcontent.group()
+	# webcontent = json.loads(webcontent)
+	# #print(webcontent)
+	# gamedata = webcontent['result']['data']['items']
+	# # print(gamedata)
+	# for game in gamedata:
+	# 	item_name = game['item']['name']
+	# 	print('数据统计：{}'.format(item_name))
+	# 	for teamdata in game['players']:
+	# 		print(teamdata)
+	# 	print('-'*50)
+
+	football_url = 'http://api.sports.sina.com.cn/'
+	'国际足球积分榜'
+	area = {'英超':4,'西甲':2,'德甲':3,'意甲':1,'法甲':5,'欧冠':10,'欧联':11}	# 联赛ID
+	datas_football = {
+			'p': 'sports',
+			's': 'sport_client',
+			'a': 'index',
+			'_sport_t_': 'football',
+			'_sport_s_': 'opta',
+			'_sport_a_': 'teamOrder',
+			'dpc': 1,
+			'callback': 'CB_870D9E88_4765_467F_A1D5_86E72C601287_3571367214_11_2019',
+			'app_key': 3571367214,
+			'type': 4,
+			'season': 2019,
+			'dpc': 1
 			}
-	r = requests.get(url=sina_nba_url, params=datas_playertop,  headers=headers)
-	webcontent = r.text
-	# print(webcontent)
-	pattern = re.compile('{"result":{"status".*]}}}')
-	webcontent = pattern.search(webcontent)
-	webcontent = webcontent.group()
-	webcontent = json.loads(webcontent)
-	#print(webcontent)
-	gamedata = webcontent['result']['data']['items']
-	# print(gamedata)
-	for game in gamedata:
-		item_name = game['item']['name']
-		print('数据统计：{}'.format(item_name))
-		for teamdata in game['players']:
-			print(teamdata)
-		print('-'*50)
+	for area_name, area_id in area.items():
+		datas_football['type'] = area_id
+		datas_football['_sport_a_'] = 'teamOrder'
+		r = requests.get(url=football_url, params=datas_football,  headers=headers)
+		webcontent = r.text
+		# print(webcontent)
+		pattern = re.compile('{"result":{"status".*}]}}')
+		webcontent = pattern.search(webcontent)
+		webcontent = webcontent.group()
+		webcontent = json.loads(webcontent)
+		# print(webcontent)
+		gamedata = webcontent['result']['data']
+		print('*'*20+'{}联赛积分'.format(area_name)+'*'*20)
+		for game in gamedata:
+			team_cn = game['team_cn']
+			team_order = game['team_order']
+			count = game['count']
+			win = game['win']
+			lose = game['lose']
+			draw = game['draw']
+			goal = game['goal']
+			losegoal = game['losegoal']
+
+			print('{0} 排名：{7} 场次：{1} 胜：{2} 负：{3} 平：{4} 进球：{5} 失球：{6}'.format(team_cn,count,win,lose,draw,goal,losegoal,team_order))
+			print('-'*50)
+
+		datas_player = datas_football
+		datas_player['_sport_a_'] = 'playerorder'
+		datas_player['item'] = 13
+		datas_player['limit'] = 50
+		r = requests.get(url=football_url, params=datas_player,  headers=headers)
+		webcontent = r.text
+		# print(webcontent)
+		pattern = re.compile('{"result":{"status".*}]}}')
+		webcontent = pattern.search(webcontent)
+		webcontent = webcontent.group()
+		webcontent = json.loads(webcontent)
+		# print(webcontent)
+		gamedata = webcontent['result']['data']
+		print('*'*20+'{}联赛射手榜'.format(area_name)+'*'*20)
+		for game in gamedata:
+			goals_count = game['item1']	#总进球
+			goals_nomal = game['item2']	#普通进球
+			goals_dian = game['item3']	#点球
+			player_name = game['player_name']
+			team_name = game['team_name']
+			print('{0} 球队：{1} 总数：{2} 普通：{3} 点球：{4}'.format(player_name,team_name,goals_count,goals_nomal,goals_dian))
+			print('-'*50)
 
 if __name__ == '__main__':
 	sina_sports()
