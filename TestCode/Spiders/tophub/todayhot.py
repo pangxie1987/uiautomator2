@@ -690,156 +690,156 @@ def sina_sports():
 		"Cookie":""
 		}
 
-	# '球员得分'
-	# datas_player = {
-	# 		'p':'radar',
-	# 		'callback':'jQuery11130004012145345625218_1575247137004',
-	# 		'p':'radar',
-	# 		's':'leaders',
-	# 		'a':'players_top',
-	# 		'season':2019,
-	# 		'season_type':'reg',
-	# 		'item_type':'average',
-	# 		'item':'points',
-	# 		'order':1,
-	# 		'_':1575247137005
-	# 		}
-	# r = requests.get(url=sina_nba_url, params=datas_player,  headers=headers)	# 球员得分
-	# webcontent = r.text
+	'球员得分'
+	datas_player = {
+			'p':'radar',
+			'callback':'jQuery11130004012145345625218_1575247137004',
+			'p':'radar',
+			's':'leaders',
+			'a':'players_top',
+			'season':2019,
+			'season_type':'reg',
+			'item_type':'average',
+			'item':'points',
+			'order':1,
+			'_':1575247137005
+			}
+	r = requests.get(url=sina_nba_url, params=datas_player,  headers=headers)	# 球员得分
+	webcontent = r.text
 	
-	# pattern = re.compile('{"result":{"status".*}]}}}')
-	# webcontent = pattern.search(webcontent)
-	# webcontent = webcontent.group()
-	# webcontent = json.loads(webcontent)
-	# print(type(webcontent))
-	# players = webcontent['result']['data']['players']
-	# for player in players:
-	# 	name = player['last_name']
-	# 	score = player['score']
-	# 	team = player['team_name']
-	# 	print(player)
-	# 	print(name, score, team)
-	# 	print('*'*50)
+	pattern = re.compile('{"result":{"status".*}]}}}')
+	webcontent = pattern.search(webcontent)
+	webcontent = webcontent.group()
+	webcontent = json.loads(webcontent)
+	print(type(webcontent))
+	players = webcontent['result']['data']['players']
+	for player in players:
+		name = player['last_name']
+		score = player['score']
+		team = player['team_name']
+		print(player)
+		print(name, score, team)
+		print('*'*50)
 
-	# '球队排名'
-	# datas_team = {
-	# 		'p':'radar',
-	# 		'callback':'jQuery1113002749331082455897_1575418857475',
-	# 		'p':'radar',
-	# 		's':'team_standing',
-	# 		'a':'conference',
-	# 		'_':1575247137005
-	# 		}
-	# r = requests.get(url=sina_nba_url, params=datas_team,  headers=headers)
-	# webcontent = r.text
+	'球队排名'
+	datas_team = {
+			'p':'radar',
+			'callback':'jQuery1113002749331082455897_1575418857475',
+			'p':'radar',
+			's':'team_standing',
+			'a':'conference',
+			'_':1575247137005
+			}
+	r = requests.get(url=sina_nba_url, params=datas_team,  headers=headers)
+	webcontent = r.text
 	
-	# pattern = re.compile('{"result":{"status".*}]}}}')
-	# webcontent = pattern.search(webcontent)
-	# webcontent = webcontent.group()
-	# webcontent = json.loads(webcontent)
-	# # print(webcontent)
-	# eastern = webcontent['result']['data']['eastern']	#东部球队
-	# western = webcontent['result']['data']['western']	#西部球队
-	# print('*'*20+'东部球队'+'*'*20)
-	# for team in eastern:
-	# 	name = team['team_name']
-	# 	wins = team['wins']
-	# 	losses = team['losses']
-	# 	points_for = team['points_for']
-	# 	points_against = team['points_against']
-	# 	print(name, wins, losses, points_for, points_against)
-	# 	print('-'*50)
-	# print('*'*20+'东部球队'+'*'*20)
-	# for team in western:
-	# 	name = team['team_name']
-	# 	wins = team['wins']
-	# 	losses = team['losses']
-	# 	points_for = team['points_for']
-	# 	points_against = team['points_against']
-	# 	print(name, wins, losses, points_for, points_against)
-	# 	print('-'*50)
+	pattern = re.compile('{"result":{"status".*}]}}}')
+	webcontent = pattern.search(webcontent)
+	webcontent = webcontent.group()
+	webcontent = json.loads(webcontent)
+	# print(webcontent)
+	eastern = webcontent['result']['data']['eastern']	#东部球队
+	western = webcontent['result']['data']['western']	#西部球队
+	print('*'*20+'东部球队'+'*'*20)
+	for team in eastern:
+		name = team['team_name']
+		wins = team['wins']
+		losses = team['losses']
+		points_for = team['points_for']
+		points_against = team['points_against']
+		print(name, wins, losses, points_for, points_against)
+		print('-'*50)
+	print('*'*20+'东部球队'+'*'*20)
+	for team in western:
+		name = team['team_name']
+		wins = team['wins']
+		losses = team['losses']
+		points_for = team['points_for']
+		points_against = team['points_against']
+		print(name, wins, losses, points_for, points_against)
+		print('-'*50)
 
-	# '最近5场比赛'
-	# datas_latest5 = {
-	# 		'p':'radar',
-	# 		'callback':'jQuery1113002749331082455897_1575418857475',
-	# 		'p':'radar',
-	# 		's':'schedule',
-	# 		'a':'latest',
-	# 		'limit':5 ,
-	# 		'_':1575247137005
-	# 		}
-	# r = requests.get(url=sina_nba_url, params=datas_latest5,  headers=headers)
-	# webcontent = r.text
-	# # print(webcontent)
+	'最近5场比赛'
+	datas_latest5 = {
+			'p':'radar',
+			'callback':'jQuery1113002749331082455897_1575418857475',
+			'p':'radar',
+			's':'schedule',
+			'a':'latest',
+			'limit':5 ,
+			'_':1575247137005
+			}
+	r = requests.get(url=sina_nba_url, params=datas_latest5,  headers=headers)
+	webcontent = r.text
+	# print(webcontent)
 	
-	# pattern = re.compile('{"result":{"status".*}]}}')
-	# webcontent = pattern.search(webcontent)
-	# webcontent = webcontent.group()
-	# webcontent = json.loads(webcontent)
-	# # print(webcontent)
-	# gamedata = webcontent['result']['data']
-	# for game in gamedata:
-	# 	home_name = game['home_name']
-	# 	home_score = game['home_score']
-	# 	away_name = game['away_name']
-	# 	away_score = game['away_score']
-	# 	print(str(home_name)+' VS '+str(away_name)+' : '+str(home_score)+' - '+str(away_score))
-	# 	print('-'*50)
+	pattern = re.compile('{"result":{"status".*}]}}')
+	webcontent = pattern.search(webcontent)
+	webcontent = webcontent.group()
+	webcontent = json.loads(webcontent)
+	# print(webcontent)
+	gamedata = webcontent['result']['data']
+	for game in gamedata:
+		home_name = game['home_name']
+		home_score = game['home_score']
+		away_name = game['away_name']
+		away_score = game['away_score']
+		print(str(home_name)+' VS '+str(away_name)+' : '+str(home_score)+' - '+str(away_score))
+		print('-'*50)
 
-	# '本赛季常规赛数据之最_球队'
-	# datas_teamtop = {
-	# 		'p':'radar',
-	# 		'callback':'jQuery1113002749331082455897_1575418857475',
-	# 		'p':'radar',
-	# 		's':'leaders',
-	# 		'a':'team_top',
-	# 		'season_type': 'reg',
-	# 		'_':1575247137005
-	# 		}
-	# r = requests.get(url=sina_nba_url, params=datas_teamtop,  headers=headers)
-	# webcontent = r.text
-	# # print(webcontent)
-	# pattern = re.compile('{"result":{"status".*]}}}')
-	# webcontent = pattern.search(webcontent)
-	# webcontent = webcontent.group()
-	# webcontent = json.loads(webcontent)
-	# #print(webcontent)
-	# gamedata = webcontent['result']['data']['items']
-	# # print(gamedata)
-	# for game in gamedata:
-	# 	item_name = game['item']['name']
-	# 	print('数据统计：{}'.format(item_name))
-	# 	for teamdata in game['teams']:
-	# 		print(teamdata)
-	# 	print('-'*50)
+	'本赛季常规赛数据之最_球队'
+	datas_teamtop = {
+			'p':'radar',
+			'callback':'jQuery1113002749331082455897_1575418857475',
+			'p':'radar',
+			's':'leaders',
+			'a':'team_top',
+			'season_type': 'reg',
+			'_':1575247137005
+			}
+	r = requests.get(url=sina_nba_url, params=datas_teamtop,  headers=headers)
+	webcontent = r.text
+	# print(webcontent)
+	pattern = re.compile('{"result":{"status".*]}}}')
+	webcontent = pattern.search(webcontent)
+	webcontent = webcontent.group()
+	webcontent = json.loads(webcontent)
+	#print(webcontent)
+	gamedata = webcontent['result']['data']['items']
+	# print(gamedata)
+	for game in gamedata:
+		item_name = game['item']['name']
+		print('数据统计：{}'.format(item_name))
+		for teamdata in game['teams']:
+			print(teamdata)
+		print('-'*50)
 
-	# '本赛季常规赛数据之最_球员'
-	# datas_playertop = {
-	# 		'p':'radar',
-	# 		'callback':'jQuery1113002749331082455897_1575418857475',
-	# 		'p':'radar',
-	# 		's':'leaders',
-	# 		'a':'player_top',
-	# 		'season_type': 'reg',
-	# 		'_':1575247137005
-	# 		}
-	# r = requests.get(url=sina_nba_url, params=datas_playertop,  headers=headers)
-	# webcontent = r.text
-	# # print(webcontent)
-	# pattern = re.compile('{"result":{"status".*]}}}')
-	# webcontent = pattern.search(webcontent)
-	# webcontent = webcontent.group()
-	# webcontent = json.loads(webcontent)
-	# #print(webcontent)
-	# gamedata = webcontent['result']['data']['items']
-	# # print(gamedata)
-	# for game in gamedata:
-	# 	item_name = game['item']['name']
-	# 	print('数据统计：{}'.format(item_name))
-	# 	for teamdata in game['players']:
-	# 		print(teamdata)
-	# 	print('-'*50)
+	'本赛季常规赛数据之最_球员'
+	datas_playertop = {
+			'p':'radar',
+			'callback':'jQuery1113002749331082455897_1575418857475',
+			'p':'radar',
+			's':'leaders',
+			'a':'player_top',
+			'season_type': 'reg',
+			'_':1575247137005
+			}
+	r = requests.get(url=sina_nba_url, params=datas_playertop,  headers=headers)
+	webcontent = r.text
+	# print(webcontent)
+	pattern = re.compile('{"result":{"status".*]}}}')
+	webcontent = pattern.search(webcontent)
+	webcontent = webcontent.group()
+	webcontent = json.loads(webcontent)
+	#print(webcontent)
+	gamedata = webcontent['result']['data']['items']
+	# print(gamedata)
+	for game in gamedata:
+		item_name = game['item']['name']
+		print('数据统计：{}'.format(item_name))
+		for teamdata in game['players']:
+			print(teamdata)
+		print('-'*50)
 
 	football_url = 'http://api.sports.sina.com.cn/'
 	'国际足球积分榜'
@@ -907,5 +907,50 @@ def sina_sports():
 			print('{0} 球队：{1} 总数：{2} 普通：{3} 点球：{4}'.format(player_name,team_name,goals_count,goals_nomal,goals_dian))
 			print('-'*50)
 
+	'热门体育新闻'
+	sina_sport_url = 'http://sports.sina.com.cn/'
+	r = requests.get(url=sina_sport_url, headers=headers)
+	codestyle = requests.utils.get_encodings_from_content(r.text)[0]	#获取网页的实际编码格式
+	r.encoding = codestyle	# 指定正确的编码格式
+	webcontent = r.text
+	#print(webcontent)
+	soup = BeautifulSoup(webcontent, "html.parser")
+	index_list = soup.find("div", class_="ty-top-ent")
+	# print(index_list)
+	content = index_list.find_all("h3", class_='ty-card-tt')
+	for news in content:
+		#print(news)
+		title = news.text
+		link = news.select('h3>a')[0].get('href')
+		link = 'https:'+link
+		print(title, link)
+		print('*'*50)
+
+def boxoffice():
+	'电影票房	http://58921.com/daily'
+	box_url = 'http://58921.com'
+	headers = {
+				"user-agent":"Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.87 Safari/537.36", 
+				"Cookie":""
+			  }
+	'每日票房'
+	r = requests.get(url=box_url+'/daily', headers=headers)
+	codestyle = requests.utils.get_encodings_from_content(r.text)[0]	#获取网页的实际编码格式
+	r.encoding = codestyle	# 指定正确的编码格式
+	webcontent = r.text
+	pattern = re.compile('<tr class=.* </tr>')	# 正则匹配所有的<tr class="">标签
+	content = pattern.findall(webcontent)
+	# print(content)
+	for news in content:
+		news = BeautifulSoup(news, "html.parser")
+		# print(news)
+		title = news.select('tr>td')[0].text
+		link = news.select('tr>td>a')[0].get('href')
+		link = box_url+link
+		total = news.select('tr>td')[1].text 	#总票房
+		people = news.select('tr>td')[2].text 	#观影人次
+		rounds = news.select('tr>td')[3].text 	#播放场次
+		print('{0} 票房：{1} 人次:{2} 场次:{3} 链接:{4} '.format(title, total, people, rounds, link))
+
 if __name__ == '__main__':
-	sina_sports()
+	boxoffice()
