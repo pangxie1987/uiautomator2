@@ -942,7 +942,7 @@ def boxoffice():
 	content = pattern.findall(webcontent)
 	# print(content)
 	for news in content:
-		news = BeautifulSoup(news, "html.parser")
+		news = BeautifulSoup(news, "html.parser")	#转换成html格式
 		# print(news)
 		title = news.select('tr>td')[0].text
 		link = news.select('tr>td>a')[0].get('href')
@@ -952,5 +952,171 @@ def boxoffice():
 		rounds = news.select('tr>td')[3].text 	#播放场次
 		print('{0} 票房：{1} 人次:{2} 场次:{3} 链接:{4} '.format(title, total, people, rounds, link))
 
+	'总票房排行'
+	r = requests.get(url=box_url+'/alltime', headers=headers)
+	codestyle = requests.utils.get_encodings_from_content(r.text)[0]	#获取网页的实际编码格式
+	r.encoding = codestyle	# 指定正确的编码格式
+	webcontent = r.text
+	pattern = re.compile('<tr class=.* </tr>')	# 正则匹配所有的<tr class="">标签
+	content = pattern.findall(webcontent)
+	# print(content)
+	for news in content:
+		news = BeautifulSoup(news, "html.parser")	#转换成html格式
+		# print(news)
+		title = news.select('tr>td')[2].text
+		paiming = news.select('tr>td')[0].text 	#年度排名
+		his_paiming = news.select('tr>td')[1].text 	#历史排名
+		total = news.select('tr>td')[1].text 	#总票房
+		date = news.select('tr>td')[6].text 	#上映年份
+		link = news.select('tr>td>a')[0].get('href')
+		link = box_url+link
+		print('{0} 年度排名：{1} 历史排名:{2} 总票房:{3} 上映年份:{4} 链接:{5} '.format(title, paiming, his_paiming, total, date, link))
+
+	'实时票房排行榜'
+	r = requests.get(url=box_url+'/boxoffice/live', headers=headers)
+	codestyle = requests.utils.get_encodings_from_content(r.text)[0]	#获取网页的实际编码格式
+	r.encoding = codestyle	# 指定正确的编码格式
+	webcontent = r.text
+	pattern = re.compile('<tr class=.* </tr>')	# 正则匹配所有的<tr class="">标签
+	content = pattern.findall(webcontent)
+	# print(content)
+	lens = len(content)
+	for news in content[1:lens-1]:
+		news = BeautifulSoup(news, "html.parser")	#转换成html格式
+		# print(news)
+		title = news.select('tr>td>a')[0].text
+		today = news.select('tr>td')[1].text 	#当日排片
+		today_people = news.select('tr>td')[2].text 	#当日观影人次
+		today_total = news.select('tr>td')[3].text 	#当日预售票房
+		total = news.select('tr>td')[4].text 	#实时累积票房
+		link = news.select('tr>td>a')[0].get('href')
+		link = box_url+link
+		print('{0} 当日排片:{1} 当日观影人次:{2} 当日预售票房:{3} 实时累积票房:{4} 链接:{5} '.format(title, today, today_people, today_total, total, link))
+
+def cbooo():
+	'中国票房	http://www.cbooo.cn/'
+	cbooo_url = 'http://www.cbooo.cn'
+	headers = {
+				"user-agent":"Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.87 Safari/537.36", 
+				"Cookie":""
+			  }
+	def gloabalbox():
+		'全球票房'
+		print('#'*20+'全球票房'+'#'*20)
+		r = requests.get(url=cbooo_url+'/global', headers=headers)
+		# codestyle = requests.utils.get_encodings_from_content(r.text)[0]	#获取网页的实际编码格式
+		# r.encoding = codestyle	# 指定正确的编码格式
+		webcontent = r.text
+		soup = BeautifulSoup(webcontent, "html.parser")	#转换成html格式
+		# pattern = re.compile('<tr class=.* </tr>')	# 正则匹配所有的<tr class="">标签
+		webcontent = soup.find('select', id='selTimeElm')
+		# content = pattern.findall(webcontent)
+		content = webcontent.find_all('option')
+		#print(content)
+		for news in content:
+			# news = BeautifulSoup(news, "html.parser")	#转换成html格式
+			pattern = re.compile('<option value=.*>')	# 正则匹配所有的<tr class="">标签
+			text = pattern.search(str(news))
+			text = text.group()
+			pattern2 = re.compile("\d+")
+			value = pattern2.search(text)
+			date_value = value.group()	# 票房日期的值
+			#print(value)
+			title = news.text 	# 票房日期的文字描述
+			title = title.strip()
+			#print(title)
+			resp = requests.get(url=cbooo_url+'/BoxOffice/getAllInfo', params={'weekId': date_value})
+			movies = resp.json()
+			print('票房日期：{}'.format(title))
+			for movie in movies:
+				movie_name = movie['MovieName']
+				order = movie['Rank']	# 排名
+				order_c = movie['RankChange']	# 排名变化
+				BoxOffice = movie['BoxOffice']	# 周末票房(万)
+				SumBoxOffice = movie['SumBoxOffice']	# 累计票房(万)
+				CountryNum = movie['CountryNum']	# 国家及地区数		
+				WeekNum = movie['WeekNum']	# 上映周数
+				print('{0} 排名：{1} 排名变化:{2}  周末票房(万):{3} 累计票房(万):{4} 国家及地区数:{5} 上映周数:{6} '.format(movie_name, order, order_c, BoxOffice, SumBoxOffice, CountryNum, WeekNum))
+				print('-'*50)
+
+	def northA():
+		'北美票房'
+		print('#'*20+'北美票房'+'#'*20)
+		r = requests.get(url=cbooo_url+'/northAmerica', headers=headers)
+		# codestyle = requests.utils.get_encodings_from_content(r.text)[0]	#获取网页的实际编码格式
+		# r.encoding = codestyle	# 指定正确的编码格式
+		webcontent = r.text
+		soup = BeautifulSoup(webcontent, "html.parser")	#转换成html格式
+		# pattern = re.compile('<tr class=.* </tr>')	# 正则匹配所有的<tr class="">标签
+		webcontent = soup.find('select', id='selTimeElm')
+		# content = pattern.findall(webcontent)
+		content = webcontent.find_all('option')
+		#print(content)
+		for news in content:
+			# news = BeautifulSoup(news, "html.parser")	#转换成html格式
+			pattern = re.compile('<option value=.*>')	# 正则匹配所有的<tr class="">标签
+			text = pattern.search(str(news))
+			text = text.group()
+			pattern2 = re.compile("\d+")
+			value = pattern2.search(text)
+			date_value = value.group()	# 票房日期的值
+			#print(value)
+			title = news.text 	# 票房日期的文字描述
+			title = title.strip()
+			#print(title)
+			resp = requests.get(url=cbooo_url+'/BoxOffice/getALLInfo_b', params={'weekId': date_value})
+			movies = resp.json()
+			print('票房日期：{}'.format(title))
+			for movie in movies:
+				movie_name = movie['MovieName']
+				order = movie['Rank']	# 排名
+				order_c = movie['RankChange']	# 排名变化
+				WeekendBoxOffice = movie['WeekendBoxOffice']	# 周末票房(万)
+				BoxOffice = movie['BoxOffice']	# 累计票房(万)
+				Cinema = movie['Cinema']	# 放映影院数	
+				WeekNum = movie['WeekNum']	# 上映周数
+				print('{0} 排名：{1} 排名变化:{2}  周末票房(万):{3} 累计票房(万):{4} 放映影院数:{5} 上映周数:{6} '.format(movie_name, order, order_c, WeekendBoxOffice, BoxOffice, Cinema, WeekNum))
+				print('-'*50)
+
+	def HK():
+		'香港票房'
+		print('#'*20+'香港票房'+'#'*20)
+		r = requests.get(url=cbooo_url+'/hongkong', headers=headers)
+		# codestyle = requests.utils.get_encodings_from_content(r.text)[0]	#获取网页的实际编码格式
+		# r.encoding = codestyle	# 指定正确的编码格式
+		webcontent = r.text
+		soup = BeautifulSoup(webcontent, "html.parser")	#转换成html格式
+		# pattern = re.compile('<tr class=.* </tr>')	# 正则匹配所有的<tr class="">标签
+		webcontent = soup.find('select', id='selTimeElm')
+		# content = pattern.findall(webcontent)
+		content = webcontent.find_all('option')
+		#print(content)
+		for news in content:
+			# news = BeautifulSoup(news, "html.parser")	#转换成html格式
+			pattern = re.compile('<option value=.*>')	# 正则匹配所有的<tr class="">标签
+			text = pattern.search(str(news))
+			text = text.group()
+			pattern2 = re.compile("\d+")
+			value = pattern2.search(text)
+			date_value = value.group()	# 票房日期的值
+			#print(value)
+			title = news.text 	# 票房日期的文字描述
+			title = title.strip()
+			#print(title)
+			resp = requests.get(url=cbooo_url+'/BoxOffice/getALLInfo_x', params={'weekId': date_value})
+			movies = resp.json()
+			print('票房日期：{}'.format(title))
+			for movie in movies:
+				movie_name = movie['MovieName']
+				order = movie['Rank']	# 排名
+				order_c = movie['RankChange']	# 排名变化
+				WeekendBoxOffice = movie['WeekBoxOffice']	# 周末票房(万)
+				BoxOffice = movie['SumBoxOffice']	# 累计票房(万)
+				# Cinema = movie['Cinema']	# 放映影院数	
+				WeekNum = movie['WeekNum']	# 上映天数
+				print('{0} 排名：{1} 排名变化:{2}  周末票房(万):{3} 累计票房(万):{4} 上映天数:{5} '.format(movie_name, order, order_c, WeekendBoxOffice, BoxOffice, WeekNum))
+				print('-'*50)
+	return HK(), gloabalbox(), northA()
+
 if __name__ == '__main__':
-	boxoffice()
+	cbooo()
