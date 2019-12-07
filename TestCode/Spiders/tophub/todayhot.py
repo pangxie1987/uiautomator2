@@ -1116,7 +1116,64 @@ def cbooo():
 				WeekNum = movie['WeekNum']	# 上映天数
 				print('{0} 排名：{1} 排名变化:{2}  周末票房(万):{3} 累计票房(万):{4} 上映天数:{5} '.format(movie_name, order, order_c, WeekendBoxOffice, BoxOffice, WeekNum))
 				print('-'*50)
-	return HK(), gloabalbox(), northA()
+
+	def getMdata_movie():
+		'影库'
+		print('#'*30+'影库'+'#'*30)
+		datas = {'area':50, 'type':0, 'year':0, 'initial':'全部', 'pIndex':1}
+		r = requests.get(url=cbooo_url+'/Mdata/getMdata_movie', params=datas, headers=headers)
+		webcontent = r.json()
+		page_num = webcontent['tPage']	# 获取总页数
+		# for i in range(1, page_num+1):
+		for i in range(1, page_num+1):
+			print(i)
+			datas['pIndex'] = i
+			r = requests.get(url=cbooo_url+'/Mdata/getMdata_movie', params=datas, headers=headers)
+			webcontent = r.json()['pData']
+			for movie in webcontent:
+				movie_name = movie['MovieName']
+				MovieEnName = movie['MovieEnName']	#英文名
+				BoxOffice = movie['BoxOffice']	# 总票房
+				releaseYear = movie['releaseYear']	# 上映年份
+				print('{0} {1} 总票房:{2}  上映年份:{3} '.format(movie_name, MovieEnName, BoxOffice, releaseYear))
+				print('-'*50)
+
+	def GetPlayIndexRank():
+		'电视'
+		print('#'*30+'电视'+'#'*30)
+		datas = {'tvType': 2}
+		r = requests.get(url=cbooo_url+'/Mess/GetPlayIndexRank', params=datas, headers=headers)
+		webcontent = r.json()
+		webcontent = webcontent['data1']	# 获取总页数
+		# print(webcontent)
+		for movie in webcontent:
+			movie_name = movie['TvName']
+			Genres = movie['Genres']	#类型
+			rank = movie['Irank']	# 排名
+			print('{0} 类型:{1} 排名:{2} '.format(movie_name, Genres, rank))
+			print('-'*50)
+
+	def GetNewsList():
+		'资讯'
+		print('#'*30+'资讯'+'#'*30)
+		datas = {'pIndex': 1}
+		r = requests.get(url=cbooo_url+'/Information/GetNewsList', params=datas, headers=headers)
+		webcontent = r.json()
+		page_num = webcontent['tolPage']	# 获取总页数
+		# for i in range(1, page_num+1):
+		for i in range(1, page_num+1):
+			print(i)
+			datas['pIndex'] = i
+			r = requests.get(url=cbooo_url+'/Information/GetNewsList', params=datas, headers=headers)
+			webcontent = r.json()['d']
+			for movie in webcontent:
+				title = movie['title']
+				addtime = movie['addtime']	#发布时间
+				print('{0} {1}'.format(addtime, title))
+				print('-'*50)
+				
+	return HK(), gloabalbox(), northA(), getMdata_movie(), GetPlayIndexRank(), GetNewsList()
+	# return GetNewsList()
 
 if __name__ == '__main__':
 	cbooo()
