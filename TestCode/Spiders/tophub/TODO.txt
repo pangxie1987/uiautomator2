@@ -1,7 +1,5 @@
-1、电影票房	http://58921.com/daily
-2、全球票房	http://www.cbooo.cn/northAmerica
+
 3、腾讯体育	https://sports.qq.com/
-4、新浪体育	https://slamdunk.sports.sina.com.cn/player/rank#season_type=reg&item_type=average&item=points
 5、BIlibili
 6、抖音
 7、TesterHome	https://testerhome.com/topics/excellent

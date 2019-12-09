@@ -1175,5 +1175,50 @@ def cbooo():
 	return HK(), gloabalbox(), northA(), getMdata_movie(), GetPlayIndexRank(), GetNewsList()
 	# return GetNewsList()
 
+def testerhome():
+	'TesterHome https://testerhome.com/topics/excellent'
+	headers = {
+			"user-agent":"Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.87 Safari/537.36", 
+			"Cookie":""
+		  }
+	tester_url = 'https://testerhome.com'
+	def excellent():
+		'精华帖'
+		r = requests.get(url=tester_url+'/topics/excellent', headers=headers)
+		# codestyle = requests.utils.get_encodings_from_content(r.text)[0]	#获取网页的实际编码格式
+		# r.encoding = codestyle	# 指定正确的编码格式
+		webcontent = r.text
+		soup = BeautifulSoup(webcontent, "html.parser")	#转换成html格式
+		webcontent = soup.find('div', class_='panel-body item-list')
+		content = webcontent.find_all('div', class_='title media-heading')
+		# print(content)
+		for news in content:
+			title = news.select('div>a')[0].get('title')
+			link = news.select('div>a')[0].get('href')
+			link = tester_url + link
+			print(title, link)
+			# print(news)
+			print('*'*50)
+	def jobs():
+		'招聘'
+		datas = {'location':'上海'}
+		r = requests.get(url=tester_url+'/jobs', params=datas, headers=headers)
+		# codestyle = requests.utils.get_encodings_from_content(r.text)[0]	#获取网页的实际编码格式
+		# r.encoding = codestyle	# 指定正确的编码格式
+		webcontent = r.text
+		soup = BeautifulSoup(webcontent, "html.parser")	#转换成html格式
+		webcontent = soup.find('div', class_='panel-body item-list')
+		content = webcontent.find_all('div', class_='title media-heading')
+		# print(content)
+		for news in content:
+			title = news.select('div>a')[0].get('title')
+			link = news.select('div>a')[0].get('href')
+			link = tester_url + link
+			print(title, link)
+			# print(news)
+			print('*'*50)
+
+	return excellent(), jobs()
+
 if __name__ == '__main__':
-	cbooo()
+	testerhome()
