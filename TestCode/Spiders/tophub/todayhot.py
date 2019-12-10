@@ -268,27 +268,29 @@ def jandan():
 		print(title, link)
 
 def douban():
-	'豆瓣新片榜单https://movie.douban.com/chart'
-	douban_url = 'https://movie.douban.com/chart'
+	douban_url = 'https://movie.douban.com'
 	headers = {
 		"user-agent":"Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.87 Safari/537.36", 
 		"Cookie":""}
-	r = requests.get(url=douban_url, headers=headers)
-	webcontent = r.text
-	#print(webcontent)
-	soup = BeautifulSoup(webcontent, "html.parser")
-	rank = soup.find("div", class_="indent")	# 首页信息
-	#print(rank)
-	content = rank.find_all("a", class_="")
-	# print(content)
-	for news in content:
-		
-		# news = news.find('a', href = True)
-		# print(news)
-		# print('=='*10)
-		title = news.text
-		link = news.get('href')
-		print(title, link)
+	def newmovie():
+		'豆瓣新片榜单https://movie.douban.com/chart'
+		r = requests.get(url=douban_url+'/chart', headers=headers)
+		webcontent = r.text
+		#print(webcontent)
+		soup = BeautifulSoup(webcontent, "html.parser")
+		rank = soup.find("div", class_="indent")	# 首页信息
+		#print(rank)
+		content = rank.find_all("a", class_="")
+		# print(content)
+		for news in content:
+			
+			# news = news.find('a', href = True)
+			# print(news)
+			# print('=='*10)
+			title = news.text
+			link = news.get('href')
+			print(title, link)
+	return newmovie()
 
 def pojie52():
 	'吾爱破解https://www.52pojie.cn/forum.php?mod=guide&view=hot'
@@ -1221,4 +1223,4 @@ def testerhome():
 	return excellent(), jobs()
 
 if __name__ == '__main__':
-	testerhome()
+	douban()
