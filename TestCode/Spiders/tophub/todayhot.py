@@ -1222,5 +1222,28 @@ def testerhome():
 
 	return excellent(), jobs()
 
+def testing51():
+	'51testing最新热门 http://bbs.51testing.com/forum.php?mod=guide&view=hot'
+	headers = {
+			"user-agent":"Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.87 Safari/537.36", 
+			"Cookie":""
+		  }
+	tester_url = 'http://bbs.51testing.com/'
+	datas = {'mod': 'guide', 'view': 'hot'}
+	r = requests.get(url=tester_url+'forum.php', params=datas, headers=headers)
+	# codestyle = requests.utils.get_encodings_from_content(r.text)[0]	#获取网页的实际编码格式
+	# r.encoding = codestyle	# 指定正确的编码格式
+	webcontent = r.text
+	soup = BeautifulSoup(webcontent, "html.parser")	#转换成html格式
+	content = soup.find_all('th', class_="common")
+	for news in content:
+		new = news.find('a', href=True)
+		title = new.text
+		link = new.get('href')
+		link = tester_url + link
+		print(title, link)
+		#print(new)
+		print('*'*50)
+
 if __name__ == '__main__':
-	douban()
+	testing51()
