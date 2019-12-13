@@ -1245,5 +1245,105 @@ def testing51():
 		#print(new)
 		print('*'*50)
 
+def github():
+	'github explore https://github.com/explore'
+	headers = {
+			"user-agent":"Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.87 Safari/537.36", 
+			"Cookie":""
+		  }
+	github_url = 'https://github.com'
+	r = requests.get(url=github_url+'/explore', headers=headers)
+	# codestyle = requests.utils.get_encodings_from_content(r.text)[0]	#获取网页的实际编码格式
+	# r.encoding = codestyle	# 指定正确的编码格式
+	webcontent = r.text
+	soup = BeautifulSoup(webcontent, "html.parser")	#转换成html格式
+	webcontent = soup.find('div', class_="col-md-8 col-lg-6 py-4")
+	# print(webcontent)
+	content = webcontent.find_all('article', class_="border rounded-1 box-shadow bg-gray-light my-4")
+	# print(content)
+	for news in content:
+		new = news.find('a', class_="text-bold")
+		new2 = news.find('a', class_="social-count float-none")
+		if new:
+			title = (new.text).strip()
+			link = new.get('href')
+			link = github_url + linkk
+			star = (new2.text).strip() 	#标星数量
+			print(title, star, link)
+			# print(new)
+			print('*'*50)
+
+def zhibo8():
+	'zhibo8 https://www.zhibo8.cc/'
+	headers = {
+			"user-agent":"Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.87 Safari/537.36", 
+			"Cookie":""
+		  }
+	zhibo8_url = 'https://www.zhibo8.cc'
+	def sportsnews():
+		'集锦&新闻'
+		r = requests.get(url=zhibo8_url, headers=headers)
+		codestyle = requests.utils.get_encodings_from_content(r.text)[0]	#获取网页的实际编码格式
+		r.encoding = codestyle	# 指定正确的编码格式
+		webcontent = r.text
+		soup = BeautifulSoup(webcontent, "html.parser")	#转换成html格式
+		webcontent = soup.find('div', id="recommend")
+		# print(webcontent)
+		content1 = webcontent.find_all('div', class_="r_video left")
+		content2 = webcontent.find_all('div', class_="r_news right")
+		for content in content1:
+			# print(content)
+			news = content.find_all('li', href=False)
+			for new in news:
+				aticles = new.find_all('a', href=True)
+				for aticle in aticles:
+					title = aticle.text
+					link = aticle.get('href')
+					print(title, link)
+					print('*'*50)
+
+		for content in content2:
+			# print(content)
+			news = content.find_all('li', href=False)
+			for new in news:
+				aticles = new.find_all('a', href=True)
+				for aticle in aticles:
+					title = aticle.text
+					link = aticle.get('href')
+					print(title, link)
+					print('*'*50)
+
+	def games():
+		'比赛-全部'
+		r = requests.get(url=zhibo8_url, headers=headers)
+		codestyle = requests.utils.get_encodings_from_content(r.text)[0]	#获取网页的实际编码格式
+		r.encoding = codestyle	# 指定正确的编码格式
+		webcontent = r.text
+		soup = BeautifulSoup(webcontent, "html.parser")	#转换成html格式
+		webcontent = soup.find('div', class_="schedule_container left")
+		
+		# print(webcontent)
+		gamebox = webcontent.find_all('div', class_='box')
+		for box in gamebox:
+			gamedate = box.find('h2').text 	#比赛日期
+			print('#############'+gamedate+'#############')
+			content = box.find('div', class_='content')
+			content = content.find_all('li', href=False)
+			for games in content:
+				title = games.get('label')
+				print(title)
+				channels = games.find_all('a', href=True)	# 直播渠道
+				for channel in channels:
+					name = channel.text 	# 直播源名称
+					link = channel.get('href') #直播地址
+					if link.startswith('http'):
+						pass
+					else:
+						link = zhibo8_url + link
+					print(name, link)
+				print('*'*50)
+			print('='*50)
+		
+	return games(), sportsnews()
 if __name__ == '__main__':
-	testing51()
+	zhibo8()
