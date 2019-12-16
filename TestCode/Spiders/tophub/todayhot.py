@@ -1343,7 +1343,148 @@ def zhibo8():
 					print(name, link)
 				print('*'*50)
 			print('='*50)
-		
 	return games(), sportsnews()
+
+def cnblogs():
+	'博客园cnblogs https://www.cnblogs.com/'
+	headers = {
+			"user-agent":"Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.87 Safari/537.36", 
+			"Cookie":""
+		  }
+	cnblogs_url = 'https://www.cnblogs.com'
+
+	def pick():
+		'首页精华 https://www.cnblogs.com/pick/'
+		i = 1
+		maxpage = 0
+		while 1:
+			page = i
+			r = requests.get(url=cnblogs_url+'/pick#p%s'%(page), headers=headers)
+			i += 1
+			# codestyle = requests.utils.get_encodings_from_content(r.text)[0]	#获取网页的实际编码格式
+			# r.encoding = codestyle	# 指定正确的编码格式
+			webcontent = r.text
+			soup = BeautifulSoup(webcontent, "html.parser")	#转换成html格式
+			webcontent = soup.find('div', id="post_list")
+			#print(webcontent)
+			content = webcontent.find_all('div', class_="post_item_body")
+			# print(content)
+			for news in content:
+				title = news.select('div>h3')[0].text
+				newsbody = news.select('div>p')[0].text
+				# linkdesc = news.find('p', class_='post_item_summary')
+				# link = linkdesc.find('a', href=True)
+				link = news.select('div>h3>a')[0].get('href')
+				print(title)
+				print(newsbody)
+				print(link)
+				print('*'*50)
+			if page == 2:
+				pages = []	# 获取总页数
+				pagelist = soup.find('div', class_='pager')
+				pagelist = pagelist.find_all('a', href=True)
+				for page in pagelist:
+					page = page.text
+					print(type(page))
+					if page.startswith('N'):	# 去掉'Next'
+						pass
+					# page = page.strip('https://www.cnblogs.com/fnng/default.html?page=')
+					else:
+						pages.append(int(page))
+					print(pages)
+				pages.sort(reverse=True)
+				maxpage = pages[0]	#获取最大页数
+				# print(maxpage)
+			print('maxpage==%s'%maxpage)
+			print('page=%s'%(page))
+			if page == maxpage:
+				print('到达最大页数，获取数据完成')
+				break	# 当前执行页达到最大页数，跳出循环
+
+	def yichun():
+		'乙醇的cnblog'
+		r = requests.get(url=cnblogs_url+'/nbkhic', headers=headers)
+		# codestyle = requests.utils.get_encodings_from_content(r.text)[0]	#获取网页的实际编码格式
+		# r.encoding = codestyle	# 指定正确的编码格式
+		webcontent = r.text
+		soup = BeautifulSoup(webcontent, "html.parser")	#转换成html格式
+		webcontent = soup.find('div', class_="forFlow")
+		# print(webcontent)
+		content = webcontent.find_all('div', class_="day")
+		# print(content)
+		for news in content:
+			dayTitle = news.find('div', class_='dayTitle')	#发布日期
+			dayTitle = dayTitle.find('a', href=True)
+			daytitle = dayTitle.text
+			postTitle = news.find('a', class_='postTitle2')	# 主题
+			posttitle = (postTitle.text).strip()
+			postcon = postcon.strip('阅读全文')
+			try:
+				postCon = news.find('div', class_='c_b_p_desc')	# 简介
+				postcon = (postCon.text).strip()
+			except:
+				postcon= 'None'
+
+			postDesc = news.find('div', class_='postDesc')	# 全文链接
+			postDesc = postDesc.find('a', href=True)
+			link = postDesc.get('href')
+			print(daytitle,posttitle,postcon, link)
+			print('*'*50)
+
+	def chongshi():
+		'虫师cnblog'
+		maxpage = 0
+		i = 1
+		while 1:
+			page = i
+			r = requests.get(url=cnblogs_url+'/fnng/default.html?page=%s'%(page), headers=headers)
+			# print('page=%s'%(page))
+			i += 1
+			print(r.url)
+			#print(r.text)
+			webcontent = r.text
+			soup = BeautifulSoup(webcontent, "html.parser")	#转换成html格式
+			webcontent = soup.find('div', id="content")
+			# print(webcontent)
+			content = webcontent.find_all('div', class_="post post-list-item")
+			# print(content)
+			for news in content:
+				postTitle = news.find('h2')	# 主题
+				posttitle = (postTitle.text).strip()
+				try:
+					postCon = news.find('div', class_='c_b_p_desc')	# 简介
+					postcon = (postCon.text).strip()
+					postcon = postcon.strip('阅读全文')
+					# postcon.replace('阅读全文')
+					linkdesc = postCon.find('a', href=True)
+					link = linkdesc.get('href')
+				except:
+					postcon= 'None'
+				
+				print(posttitle)
+				print(postcon)
+				print(link)
+				print('*'*50)
+
+			if page == 2:
+				pages = []	# 获取总页数
+				pagelist = soup.find('div', id='homepage_bottom_pager')
+				pagelist = pagelist.find_all('a', href=True)
+				for page in pagelist:
+					page = page.get('href')
+					page = page.strip('https://www.cnblogs.com/fnng/default.html?page=')
+					pages.append(int(page))
+				pages.sort(reverse=True)
+				maxpage = pages[0]	#获取最大页数
+				# print(maxpage)
+			print('maxpage==%s'%maxpage)
+			print('page=%s'%(page))
+			if page == maxpage:
+				print('到达最大页数，获取数据完成')
+				break	# 当前执行页达到最大页数，跳出循环
+	
+	# return yichun(), chongshi(), pick()
+	return pick()
+
 if __name__ == '__main__':
-	zhibo8()
+	cnblogs()
