@@ -118,26 +118,127 @@ def kr36():
 	print(title_list)
 
 def baidu():
-	'百度实时热点http://top.baidu.com/?vit=1&fr=topnews'
-	baidu_url = 'http://top.baidu.com/?vit=1&fr=topnews'
-	headers = {"user-agent":"", "Cookie":""}
-	r = requests.get(url=baidu_url, headers=headers)
-	webcontent = r.text
-	# print(webcontent)
-	soup = BeautifulSoup(webcontent, "html.parser")
-	index_list = soup.find("ul", id="hot-list")
-	#print(index_list)
-	content1 = index_list.find_all("a", class_="list-title")
-	title_list = []
-	for i in content1:
-		#print(i)
-		article = {}
-		link = i.get('href')
-		title = i.text
-		article['title'] = title
-		article['link'] = link
-		print(article)
-		title_list.append(article)
+	'baidu'
+	headers = {
+			"user-agent":"Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.87 Safari/537.36", 
+			"Cookie":""}
+	baidu_url = 'http://top.baidu.com'
+
+	def baidu_hot():
+		'百度实时热点http://top.baidu.com/?vit=1&fr=topnews'		
+		r = requests.get(url=baidu_url+'/?vit=1&fr=topnews', headers=headers)
+		codestyle = requests.utils.get_encodings_from_content(r.text)[0]	#获取网页的实际编码格式
+		r.encoding = codestyle	# 指定正确的编码格式
+		webcontent = r.text
+		# print(webcontent)
+		soup = BeautifulSoup(webcontent, "html.parser")
+		index_list = soup.find("ul", id="hot-list")
+		#print(index_list)
+		content1 = index_list.find_all("a", class_="list-title")
+		title_list = []
+		for i in content1:
+			#print(i)
+			article = {}
+			link = i.get('href')
+			title = i.text
+			article['title'] = title
+			article['link'] = link
+			print(article)
+			title_list.append(article)
+
+	def tieba():
+		'贴吧热议榜http://tieba.baidu.com/hottopic/browse/topicList'
+		tieba_url = 'http://tieba.baidu.com'
+		datas = {'res_type':'1', 'red_tag':'v1188856214'}
+		r = requests.get(url=tieba_url+'/hottopic/browse/topicList', params=datas, headers=headers)
+		codestyle = requests.utils.get_encodings_from_content(r.text)[0]	#获取网页的实际编码格式
+		r.encoding = codestyle	# 指定正确的编码格式
+		webcontent = r.text
+		# print(webcontent)
+		soup = BeautifulSoup(webcontent, "html.parser")
+		rank = soup.find("ul", class_="topic-top-list")
+		# print(rank)
+		content = rank.find_all("div", class_="topic-name")
+		for news in content:
+			#print(news)
+			title = news.text
+			link = news.a.attrs['href']
+			print(title, link)
+			print('=='*20)
+
+	def baidu_zhidao_daily():
+		'百度知道日报	 https://zhidao.baidu.com/daily/'
+		# 返回网页乱码的处理  https://blog.csdn.net/ahua_c/article/details/80942726
+		zhidao_url = 'https://zhidao.baidu.com'
+		r = requests.get(url=zhidao_url+'/daily/',  headers=headers)
+		codestyle = requests.utils.get_encodings_from_content(r.text)[0]	#获取网页的实际编码格式
+		r.encoding = codestyle	# 指定正确的编码格式
+		#print(r.encoding)
+		webcontent = r.text
+		# print(webcontent)
+		soup = BeautifulSoup(webcontent, "html.parser")
+		rank = soup.find("ul", class_="daily-list")
+		#print(rank)
+		content = rank.find_all("div", class_="daily-cont-top")
+		for news in content:
+			#print(news)
+			news = news.select('div>h2>a')[0]
+			# print(news)
+			title = news.text
+			#title = title.decode('ISO-8859-1').encode('utf-8')
+			link = zhidao_url + news.get('href')
+			print(title, link)
+			print('--'*30)
+
+	def baidu_hotnews():
+		'百度热点要闻	 http://news.baidu.com/'
+		# 返回网页乱码的处理  https://blog.csdn.net/ahua_c/article/details/80942726
+		hotnews_url = 'http://news.baidu.com/'
+		r = requests.get(url=hotnews_url,  headers=headers)
+		codestyle = requests.utils.get_encodings_from_content(r.text)[0]	#获取网页的实际编码格式
+		r.encoding = codestyle	# 指定正确的编码格式
+		#print(r.encoding)
+		webcontent = r.text
+		# print(webcontent)
+		soup = BeautifulSoup(webcontent, "html.parser")
+		hotnews = soup.find("div", class_="hotnews")
+		hotnews = hotnews.find_all('strong')
+		print("##############热点要闻##############")
+		for news in hotnews:
+			title = news.select('strong>a')[0].text
+			link = news.select('strong>a')[0].get('href')
+			print(title, link)
+			print('*'*50)
+		focuslistnews = soup.find_all("ul", class_="ulist focuslistnews")
+		for focuslist in focuslistnews:
+			news = focuslist.find_all('li')
+			for new in news:
+				title = new.select('li>a')[0].text
+				link = new.select('li>a')[0].get('href')
+				print(title, link)
+				print('*'*50)
+
+		hotwords = soup.find("ul", class_="hotwords clearfix")
+		hotwords = hotwords.find_all('li')
+		print("##############热搜新闻词##############")
+		for news in hotwords:
+			title = news.select('li>a')[0].text
+			link = news.select('li>a')[0].get('href')
+			print(title, link)
+			print('*'*50)
+
+		baijia = soup.find("div", class_="baijia-focus-list")
+		baijia = baijia.find_all('ul',class_='ulist bdlist')
+		print("##############百家号##############")
+		for baijialist in baijia:
+			news = baijialist.find_all('li')
+			for new in news:
+				title = new.select('li>a')[0].text
+				link = new.select('li>a')[0].get('href')
+				print(title, link)
+				print('*'*50)
+	# return baidu_hot(), tieba(), baidu_zhidao_daily()
+	return baidu_hotnews()
 
 def sspai():
 	'少数派https://sspai.com'
@@ -315,26 +416,6 @@ def pojie52():
 		print(title, link)
 		print('=='*20)
 
-def tieba():
-	'贴吧热议榜http://tieba.baidu.com/hottopic/browse/topicList'
-	tieba_url = 'http://tieba.baidu.com/hottopic/browse/topicList'
-	headers = {
-		"user-agent":"Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.87 Safari/537.36", 
-		"Cookie":""}
-	datas = {'res_type':'1', 'red_tag':'v3370729790'}
-	r = requests.get(url=tieba_url, params=datas, headers=headers)
-	webcontent = r.text
-	#print(webcontent)
-	soup = BeautifulSoup(webcontent, "html.parser")
-	rank = soup.find("ul", class_="topic-top-list")
-	# print(rank)
-	content = rank.find_all("div", class_="topic-name")
-	for news in content:
-		#print(news)
-		title = news.text
-		link = news.a.attrs['href']
-		print(title, link)
-		print('=='*20)
 
 def v2ex():
 	'V2EX	https://www.v2ex.com/'
@@ -484,32 +565,6 @@ def zhihu_daily():
 		print(title, link)
 		print('--'*30)
 
-def baidu_zhidao_daily():
-	'百度知道日报	 https://zhidao.baidu.com/daily/'
-	# 返回网页乱码的处理  https://blog.csdn.net/ahua_c/article/details/80942726
-	zhidao_url = 'https://zhidao.baidu.com/daily/'
-	headers = {
-		"user-agent":"Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.87 Safari/537.36", 
-		"Cookie":""}
-	r = requests.get(url=zhidao_url,  headers=headers)
-	codestyle = requests.utils.get_encodings_from_content(r.text)[0]	#获取网页的实际编码格式
-	r.encoding = codestyle	# 指定正确的编码格式
-	#print(r.encoding)
-	webcontent = r.text
-	# print(webcontent)
-	soup = BeautifulSoup(webcontent, "html.parser")
-	rank = soup.find("ul", class_="daily-list")
-	#print(rank)
-	content = rank.find_all("div", class_="daily-cont-top")
-	for news in content:
-		#print(news)
-		news = news.select('div>h2>a')[0]
-		# print(news)
-		title = news.text
-		#title = title.decode('ISO-8859-1').encode('utf-8')
-		link = zhidao_url + news.get('href')
-		print(title, link)
-		print('--'*30)
 
 def kaiyan():
 	'开眼视频	https://www.kaiyanapp.com/'
@@ -1391,7 +1446,6 @@ def cnblogs():
 					# page = page.strip('https://www.cnblogs.com/fnng/default.html?page=')
 					else:
 						pages.append(int(page))
-					print(pages)
 				pages.sort(reverse=True)
 				maxpage = pages[0]	#获取最大页数
 				# print(maxpage)
@@ -1487,4 +1541,4 @@ def cnblogs():
 	return pick()
 
 if __name__ == '__main__':
-	cnblogs()
+	baidu()
