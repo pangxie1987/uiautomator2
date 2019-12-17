@@ -4,8 +4,18 @@
 6、抖音
 9、腾讯视频电影、综艺、电视剧排行榜https://v.qq.com/
 
-12、软件测试-接口测试框架 https://www.testclass.cn/category/interface_test
 13、菜鸟教程 https://www.runoob.com/
 14、证券时报网 http://www.stcn.com/
 15、上交所 http://www.sse.com.cn/
 16、深交所 http://www.szse.cn/
+17、每日经济网 http://www.nbd.com.cn/
+18、第一财经日报 https://www.yicai.com/
+19、第一财经杂志 https://www.cbnweek.com/
+20、环球网 https://www.huanqiu.com/
+21、财富 http://www.fortunechina.com/
+22、福布斯 http://www.forbeschina.com/
+23、经济观察报 http://www.eeo.com.cn/
+24、商界 http://www.kanshangjie.com/
+
+25、码云 https://gitee.com/explore
+26、CSDN https://www.csdn.net/

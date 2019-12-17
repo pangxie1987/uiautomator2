@@ -237,8 +237,8 @@ def baidu():
 				link = new.select('li>a')[0].get('href')
 				print(title, link)
 				print('*'*50)
-	# return baidu_hot(), tieba(), baidu_zhidao_daily()
-	return baidu_hotnews()
+	return baidu_hot(), tieba(), baidu_zhidao_daily(), baidu_hotnews()
+	#return baidu_hotnews()
 
 def sspai():
 	'少数派https://sspai.com'
@@ -1540,5 +1540,141 @@ def cnblogs():
 	# return yichun(), chongshi(), pick()
 	return pick()
 
+def testclass():
+	'软件测试-接口测试 testclass https://www.testclass.cn'
+	headers = {
+			"user-agent":"Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.87 Safari/537.36", 
+			"Cookie":""
+		  }
+	testclass_url = 'https://www.testclass.cn'
+	def testclass_home():
+		'首页'
+		r = requests.get(url=testclass_url, headers=headers)
+		# codestyle = requests.utils.get_encodings_from_content(r.text)[0]	#获取网页的实际编码格式
+		# r.encoding = codestyle	# 指定正确的编码格式
+		webcontent = r.text
+		soup = BeautifulSoup(webcontent, "html.parser")	#转换成html格式
+		webcontent = soup.find_all('article', class_="aside-item card scrool-item")
+		print('#########################首页########################')
+		for news in webcontent:
+			new = news.find('h2', class_='card-title')
+			title = new.select('h2>a')[0].text
+			link = new.select('h2>a')[0].get('href')
+			print(title, link)
+			print('*'*50)
+
+	def testclass_function():
+		'功能测试'
+		r = requests.get(url=testclass_url+'/category/functional_test', headers=headers)
+		# codestyle = requests.utils.get_encodings_from_content(r.text)[0]	#获取网页的实际编码格式
+		# r.encoding = codestyle	# 指定正确的编码格式
+		webcontent = r.text
+		soup = BeautifulSoup(webcontent, "html.parser")	#转换成html格式
+		webcontent = soup.find_all('article', class_="col-md-6 col-xl-4 category-item")
+		print('#########################功能测试########################')
+		for news in webcontent:
+			new = news.find('h3', class_='text-center')
+			title = new.select('h3>a')[0].text
+			link = new.select('h3>a')[0].get('href')
+			print(title, link)
+			print('*'*50)
+
+	def testclass_performance_test():
+		'性能测试'
+		r = requests.get(url=testclass_url+'/category/performance_test', headers=headers)
+		# codestyle = requests.utils.get_encodings_from_content(r.text)[0]	#获取网页的实际编码格式
+		# r.encoding = codestyle	# 指定正确的编码格式
+		webcontent = r.text
+		soup = BeautifulSoup(webcontent, "html.parser")	#转换成html格式
+		webcontent = soup.find_all('article', class_="col-md-6 col-xl-4 category-item")
+		print('#########################性能测试########################')
+		for news in webcontent:
+			new = news.find('h3', class_='text-center')
+			title = new.select('h3>a')[0].text
+			link = new.select('h3>a')[0].get('href')
+			print(title, link)
+			print('*'*50)
+
+	def testclass_security_test():
+		'安全测试'
+		r = requests.get(url=testclass_url+'/category/security_test', headers=headers)
+		# codestyle = requests.utils.get_encodings_from_content(r.text)[0]	#获取网页的实际编码格式
+		# r.encoding = codestyle	# 指定正确的编码格式
+		webcontent = r.text
+		soup = BeautifulSoup(webcontent, "html.parser")	#转换成html格式
+		webcontent = soup.find_all('article', class_="col-md-6 col-xl-4 category-item")
+		print('#########################安全测试########################')
+		for news in webcontent:
+			new = news.find('h3', class_='text-center')
+			title = new.select('h3>a')[0].text
+			link = new.select('h3>a')[0].get('href')
+			print(title, link)
+			print('*'*50)
+
+	def testclass_interface():
+		'接口测试'
+		r = requests.get(url=testclass_url+'/category/interface_test', headers=headers)
+		# codestyle = requests.utils.get_encodings_from_content(r.text)[0]	#获取网页的实际编码格式
+		# r.encoding = codestyle	# 指定正确的编码格式
+		webcontent = r.text
+		soup = BeautifulSoup(webcontent, "html.parser")	#转换成html格式
+		webcontent = soup.find_all('article', class_="col-md-6 col-xl-4 category-item")
+		print('#########################接口测试########################')
+		for news in webcontent:
+			new = news.find('h3', class_='text-center')
+			title = new.select('h3>a')[0].text
+			link = new.select('h3>a')[0].get('href')
+			print(title, link)
+			print('*'*50)
+
+	def testclass_automation_test():
+		'自动化测试'
+		for i in range(1, 50):
+			r = requests.get(url=testclass_url+'/category/automation_test/page/%s'%i, headers=headers)
+			# codestyle = requests.utils.get_encodings_from_content(r.text)[0]	#获取网页的实际编码格式
+			# r.encoding = codestyle	# 指定正确的编码格式
+			webcontent = r.text
+			if r.status_code == 404:	#超出请求页数，则停止请求
+				break
+			soup = BeautifulSoup(webcontent, "html.parser")	#转换成html格式
+			webcontent = soup.find_all('article', class_="col-md-6 col-xl-4 category-item")
+			print('#########################自动化测试########################')
+			for news in webcontent:
+				new = news.find('h3', class_='text-center')
+				title = new.select('h3>a')[0].text
+				link = new.select('h3>a')[0].get('href')
+				print(title, link)
+				print('*'*50)
+	return testclass_interface(), testclass_home(), testclass_function(), testclass_performance_test(), testclass_security_test(), testclass_automation_test()
+	# return testclass_automation_test()
+
+def runoob():
+	'菜鸟教程 https://www.runoob.com/'
+	headers = {
+			"user-agent":"Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.87 Safari/537.36", 
+			"Cookie":""
+		  }
+	runoob_url = 'https://www.runoob.com/'
+	r = requests.get(url=runoob_url, headers=headers)
+	# codestyle = requests.utils.get_encodings_from_content(r.text)[0]	#获取网页的实际编码格式
+	# r.encoding = codestyle	# 指定正确的编码格式
+	webcontent = r.text
+	soup = BeautifulSoup(webcontent, "html.parser")	#转换成html格式
+	soup = soup.find('div', attrs={"class":"col middle-column-home"})
+	webcontent = soup.find_all('div', class_=True)
+	for module in webcontent:
+		modulename = module.select('div>h2')[0].text
+		print('模块名称：',modulename)
+		modules = module.find_all('a', class_='item-top item-1')
+		for news in modules:
+			link = news.get('href')
+			try:
+				title = news.select('a>strong')[0].text
+			except:
+				break
+			print(title, link)
+			print('*'*50)
+		
+
 if __name__ == '__main__':
-	baidu()
+	runoob()
