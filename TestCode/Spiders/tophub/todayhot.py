@@ -1674,7 +1674,76 @@ def runoob():
 				break
 			print(title, link)
 			print('*'*50)
-		
 
+def gitee():
+	'码云 https://gitee.com/explore'
+	headers = {
+			"user-agent":"Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.87 Safari/537.36", 
+			"Cookie":""
+		  }
+	gitee_url = 'https://gitee.com/explore'
+	def tuijian():
+		'推荐项目'
+		r = requests.get(url=gitee_url, headers=headers)
+		# codestyle = requests.utils.get_encodings_from_content(r.text)[0]	#获取网页的实际编码格式
+		# r.encoding = codestyle	# 指定正确的编码格式
+		webcontent = r.text
+		soup = BeautifulSoup(webcontent, "html.parser")	#转换成html格式
+		# ------------其他推荐项目------------
+		webcontent = soup.find_all('div', class_="explore-custom-categories__container")
+		for modules in webcontent:
+			modulename = modules.select('div>h3')[0].text
+			print('模块名称：',modulename)
+			news = modules.find_all('div', class_='item')
+			for new in news:
+
+				titlecontent = new.find('div', class_='title-left')
+				title = titlecontent.select('div>h3>a')[0].text
+				link = titlecontent.select('div>h3>a')[0].get('href')
+				contentdesc = new.find('div', class_='project-desc')
+				desc = contentdesc.text
+				print(title, desc, link)
+				print('*'*50)
+		# ------------推荐项目------------
+		webcontent2 = soup.find('div', class_="nine wide column")
+		modulename = webcontent2.select('div>h3')[0].text
+		print('模块名称：',modulename)
+		news = modules.find_all('div', class_='item')
+		for new in news:
+
+			titlecontent = new.find('div', class_='title-left')
+			title = titlecontent.select('div>h3>a')[0].text
+			link = titlecontent.select('div>h3>a')[0].get('href')
+			contentdesc = new.find('div', class_='project-desc')
+			desc = contentdesc.text
+			print(title, desc, link)
+			print('*'*50)
+		# ------------今日热门------------
+		print('------------今日热门------------')
+		daily_trending = soup.find('div', class_='ui tab active')
+		daily_trending = daily_trending.find_all('div', class_='explore-trending-projects__list-item')
+		for daily in daily_trending:
+			titledesc = daily.find('div', class_='title')
+			title = titledesc.select('div>a')[0].text
+			link = titledesc.select('div>a')[0].get('href')
+			description = daily.find('div', class_='description')
+			description = description.text
+			print(title)			
+			print(description)
+			print('*'*50)
+		# ------------本周热门------------
+		print('------------本周热门------------')
+		daily_trending = soup.find('div', class_='ui tab')
+		daily_trending = daily_trending.find_all('div', class_='explore-trending-projects__list-item')
+		for daily in daily_trending:
+			titledesc = daily.find('div', class_='title')
+			title = titledesc.select('div>a')[0].text
+			link = titledesc.select('div>a')[0].get('href')
+			description = daily.find('div', class_='description')
+			description = description.text
+			print(title)			
+			print(description)
+			print('*'*50)
+	return tuijian()
 if __name__ == '__main__':
-	runoob()
+	gitee()

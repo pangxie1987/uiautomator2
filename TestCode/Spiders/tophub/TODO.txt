@@ -4,7 +4,6 @@
 6、抖音
 9、腾讯视频电影、综艺、电视剧排行榜https://v.qq.com/
 
-13、菜鸟教程 https://www.runoob.com/
 14、证券时报网 http://www.stcn.com/
 15、上交所 http://www.sse.com.cn/
 16、深交所 http://www.szse.cn/
@@ -17,5 +16,4 @@
 23、经济观察报 http://www.eeo.com.cn/
 24、商界 http://www.kanshangjie.com/
 
-25、码云 https://gitee.com/explore
 26、CSDN https://www.csdn.net/
