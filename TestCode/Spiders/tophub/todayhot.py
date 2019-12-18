@@ -1745,6 +1745,91 @@ def gitee():
 			print(description)
 			print('*'*50)
 	return tuijian()
+
+def STCN():
 	'证券时报网 http://www.stcn.com/'
+	headers = {
+			"user-agent":"Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.87 Safari/537.36", 
+			"Cookie":""
+		  }
+	stcn_url = 'http://www.stcn.com/'
+	def kuaixun():
+		'快讯'
+		kuaixun_url = 'http://kuaixun.stcn.com'
+		for i in range(1, 100):
+			r = requests.get(url=kuaixun_url+'/index_%s.shtml'%(i), headers=headers)
+			# codestyle = requests.utils.get_encodings_from_content(r.text)[0]	#获取网页的实际编码格式
+			# r.encoding = codestyle	# 指定正确的编码格式
+			webcontent = r.text
+			soup = BeautifulSoup(webcontent, "html.parser")	#转换成html格式
+			if i == 1:
+				pages = soup.find('div', attrs={'class':"pagelist1"})
+				pages = pages.find_all('a', href=True)	# 获取最大页数
+				pagelist = []
+				for page in pages:
+					pagenum = page.text
+					pagenum = pagenum.strip('http://kuaixun.stcn.com/index') 
+					pagenum = pagenum.strip('.shtml') 
+					try:
+						pagenum = int(pagenum)
+						pagelist.append(pagenum)
+					except:
+						print('pagenum is not int')
+				print(pagelist)
+				pagelist.sort(reverse=True)
+				maxpage = pagelist[0]
+				print(maxpage)
+			# ------------获取快讯消息------------
+			kuaixun = soup.find('ul', attrs={"id":"news_list2"})
+			kuaixun = kuaixun.find_all('li')
+			for module in kuaixun:
+				timedesc = module.select('li>i')[0].text 	#发布时间
+				datedesc = module.select('li>span')[0].text 	#发布日期
+				title = module.select('li>a')[0].get('title')
+				link = module.select('li>a')[0].get('href')
+				print(datedesc, timedesc, title, link)
+				print('*'*50)
+			if i == maxpage:	#达到最大页数则停止循环
+					break
+
+	def hotnews():
+		'热点新闻'
+		r = requests.get(url=stcn_url, headers=headers)
+		# codestyle = requests.utils.get_encodings_from_content(r.text)[0]	#获取网页的实际编码格式
+		# r.encoding = codestyle	# 指定正确的编码格式
+		webcontent = r.text
+		soup = BeautifulSoup(webcontent, "html.parser")	#转换成html格式
+		webcontent = soup.find('div', class_='maj_left')
+		# --------------加粗新闻--------------
+		# hotnews = webcontent.find_all('h2', href=False)
+		# for hotnew in hotnews:
+		# 	title = hotnew.select('h2>a')[0].text
+		# 	link = hotnew.select('h2>a')[0].get('href')
+		# 	print(title, link)
+		# # --------------热点新闻--------------
+		# news = webcontent.find_all('li')
+		# for new in news:
+		# 	article = new.select('li>a')
+		# 	title1 = article[0].text
+		# 	link1 = article[0].get('href')
+		# 	if len(article) >1:
+		# 		title2 = article[1].text
+		# 		link2 = article[1].get('href')
+		# 		print(title2, link2)
+		# 	print(title1, link1)
+		# 	print('*'*50)
+
+		# --------------财经要闻--------------
+		caijing = soup.find('div', class_='caijing')
+		news = caijing.find_all('p')
+		for new in news:
+			article = new.select('p>a')
+			title = article[0].text
+			link = article[0].get('href')
+			print(title, link)
+			print('*'*50)
+	# return kuaixun(), hotnews()
+	return hotnews()
+
 if __name__ == '__main__':
-	gitee()
+	STCN()
