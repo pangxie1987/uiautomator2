@@ -1801,23 +1801,23 @@ def STCN():
 		soup = BeautifulSoup(webcontent, "html.parser")	#转换成html格式
 		webcontent = soup.find('div', class_='maj_left')
 		# --------------加粗新闻--------------
-		# hotnews = webcontent.find_all('h2', href=False)
-		# for hotnew in hotnews:
-		# 	title = hotnew.select('h2>a')[0].text
-		# 	link = hotnew.select('h2>a')[0].get('href')
-		# 	print(title, link)
-		# # --------------热点新闻--------------
-		# news = webcontent.find_all('li')
-		# for new in news:
-		# 	article = new.select('li>a')
-		# 	title1 = article[0].text
-		# 	link1 = article[0].get('href')
-		# 	if len(article) >1:
-		# 		title2 = article[1].text
-		# 		link2 = article[1].get('href')
-		# 		print(title2, link2)
-		# 	print(title1, link1)
-		# 	print('*'*50)
+		hotnews = webcontent.find_all('h2', href=False)
+		for hotnew in hotnews:
+			title = hotnew.select('h2>a')[0].text
+			link = hotnew.select('h2>a')[0].get('href')
+			print(title, link)
+		# --------------热点新闻--------------
+		news = webcontent.find_all('li')
+		for new in news:
+			article = new.select('li>a')
+			title1 = article[0].text
+			link1 = article[0].get('href')
+			if len(article) >1:
+				title2 = article[1].text
+				link2 = article[1].get('href')
+				print(title2, link2)
+			print(title1, link1)
+			print('*'*50)
 
 		# --------------财经要闻--------------
 		caijing = soup.find('div', class_='caijing')
@@ -1828,8 +1828,54 @@ def STCN():
 			link = article[0].get('href')
 			print(title, link)
 			print('*'*50)
-	# return kuaixun(), hotnews()
-	return hotnews()
+
+	def stock():
+		'股市'
+		stock_url = 'http://stock.stcn.com/'
+		r = requests.get(url=stock_url, headers=headers)
+		# codestyle = requests.utils.get_encodings_from_content(r.text)[0]	#获取网页的实际编码格式
+		# r.encoding = codestyle	# 指定正确的编码格式
+		webcontent = r.text
+		soup = BeautifulSoup(webcontent, "html.parser")	#转换成html格式
+		webcontent = soup.find('ul', id='idData')
+		hotnews = webcontent.find_all('li')
+		for hotnew in hotnews:
+			titledesc = hotnew.find('p', class_='tit')
+			title = titledesc.select('p>a')[0].get('title')
+			link = titledesc.select('p>a')[0].get('href')
+			description = hotnew.find('p', class_='exp')
+			description = description.text
+			print(title, description, link)
+
+	def finance():
+		'机构'
+		finance_url = 'http://finance.stcn.com/'
+		r = requests.get(url=finance_url, headers=headers)
+		# codestyle = requests.utils.get_encodings_from_content(r.text)[0]	#获取网页的实际编码格式
+		# r.encoding = codestyle	# 指定正确的编码格式
+		webcontent = r.text
+		soup = BeautifulSoup(webcontent, "html.parser")	#转换成html格式
+		webcontent = soup.find('div', class_='box_left')
+		# --------------头条要闻--------------
+		hotnew = webcontent.find('dl', class_='hotNews')
+		hotnewt = hotnew.find('dd', class_='tit')
+		hotnewtitle = hotnewt.select('dd>a')[0].get('title')
+		hotnewlink = hotnewt.select('dd>a')[0].get('href')
+		hotnewd = hotnew.find('dd', class_='exp')
+		hotnewdesc = hotnewd.text
+		hotnews = webcontent.find_all('li')
+		print(hotnewtitle, hotnewdesc, hotnewlink)
+		# --------------要闻--------------
+		topnews = webcontent.find_all('li')
+		for hotnew in topnews:
+			titledesc = hotnew.find('p', class_='tit')
+			title = titledesc.select('p>a')[0].get('title')
+			link = titledesc.select('p>a')[0].get('href')
+			# description = hotnew.find('p', class_='exp')
+			# description = description.text
+			print(title, link)	
+	# return kuaixun(), hotnews() ,stock(), finance()
+	return finance()
 
 if __name__ == '__main__':
 	STCN()
