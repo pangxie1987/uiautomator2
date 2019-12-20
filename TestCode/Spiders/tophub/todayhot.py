@@ -1874,8 +1874,50 @@ def STCN():
 			# description = hotnew.find('p', class_='exp')
 			# description = description.text
 			print(title, link)	
-	# return kuaixun(), hotnews() ,stock(), finance()
-	return finance()
+
+	def datastcn():
+		'数据新闻'
+		data_url = 'http://data.stcn.com/'
+		r = requests.get(url=data_url, headers=headers)
+		# codestyle = requests.utils.get_encodings_from_content(r.text)[0]	#获取网页的实际编码格式
+		# r.encoding = codestyle	# 指定正确的编码格式
+		webcontent = r.text
+		soup = BeautifulSoup(webcontent, "html.parser")	#转换成html格式
+		# --------------机器人新闻--------------
+		webcontent = soup.find('ul', class_='jqr_con')
+		topnews = webcontent.find_all('li')
+		for hotnew in topnews:
+			timedesc = hotnew.select('li>span')[0].text
+			title = hotnew.select('li>a')[0].get('title')
+			link = hotnew.select('li>a')[0].get('href')
+			print(timedesc, title, link)
+
+	def stocktop():
+		'龙虎榜单'
+		localtion = ['sh', 'sz']	# 交易所
+		timedesc = time.time()
+		for local in localtion:
+			stocktop_url = 'http://data.stcn.com/common27/filepublish/lhb%sListQuery/list/querylist_1.json'%local
+			r = requests.get(url=stocktop_url, params={'timestamp': timedesc}, headers=headers)
+			
+			webcontent = r.text
+			webcontent = webcontent.replace("'", '"')
+			webcontent = json.loads(webcontent)
+			print('证券代码	证券简称	 成交量(万股)  成交金额(万股)  期间涨跌幅(%)  期间换手率(%)  交易开始日  交易截止日  异动原因')
+			for stocks in webcontent['data']:
+				secucode = stocks['secucode']
+				secuabbr = stocks['secuabbr']
+				TurnoverVolume = stocks['TurnoverVolume']
+				TurnoverValue = stocks['TurnoverValue']
+				zdf = stocks['zdf']
+				hsl = stocks['hsl']
+				TradingStartDate = stocks['TradingStartDate']
+				tradingday = stocks['tradingday']
+				ms = stocks['ms']
+				print(secucode.ljust(6), secuabbr.ljust(6), TurnoverVolume.ljust(12), TurnoverValue.ljust(15), zdf.ljust(12), hsl.ljust(12), TradingStartDate.ljust(10), tradingday.ljust(10), ms)
+
+	return kuaixun(), hotnews() ,stock(), finance(), datastcn(), stocktop()
+	# return stocktop()
 
 if __name__ == '__main__':
 	STCN()
