@@ -1916,8 +1916,101 @@ def STCN():
 				ms = stocks['ms']
 				print(secucode.ljust(6), secuabbr.ljust(6), TurnoverVolume.ljust(12), TurnoverValue.ljust(15), zdf.ljust(12), hsl.ljust(12), TradingStartDate.ljust(10), tradingday.ljust(10), ms)
 
-	return kuaixun(), hotnews() ,stock(), finance(), datastcn(), stocktop()
-	# return stocktop()
+	def newstock():
+		'新股发行'
+		timedesc = time.time()
+		i = 1
+		while 1:
+			print('i====',i)
+			newstock_url = 'http://data.stcn.com/common27/filepublish/newstockremind/list/querybypage_%s.json'%i
+			r = requests.get(url=newstock_url, params={'timestamp': timedesc}, headers=headers)
+			
+			webcontent = r.text
+			webcontent = webcontent.replace("'", '"')
+			webcontent = json.loads(webcontent)
+			print('证券代码	证券简称	 申购代码  发行总量(万股)  网上发行(万股)  网上申购(万股)  上申所需市值(万股) 申购价格(元)  申购日期 市盈率(倍)  中签率(%)  中签公布日  上市日期  首日涨跌(%)  连续一字板  上市涨跌幅(%)')
+			for stocks in webcontent['data']:
+				secucode = stocks['SecuCode']
+				secuabbr = stocks['SecuAbbr']
+				sgdm = stocks['sgdm']
+				fxsx = stocks['fxsx']
+				wsfx = stocks['wsfx']
+				sgsx = stocks['sgsx']
+				sgsz = stocks['sgsz']
+				sgjg = stocks['sgjg']
+				sgrq = (stocks['sgrq']).strip('00:00:00.000')
+				fxsyl = stocks['fxsyl']
+				wszql = stocks['wszql']
+				zqhgbr = (stocks['zqhgbr']).strip('00:00:00.000')
+				ssrq = stocks['ssrq']
+				if ssrq != '':
+					GMT_FORMAT = '%b %d, %Y %I:%M:%S %p'
+					mytime = time.strptime(ssrq, GMT_FORMAT)
+					ssrq = time.strftime('%Y-%m-%d', mytime)	# 时间格式转换
+				srfsd = stocks['srfsd']
+				ts = stocks['ts']
+				ssfsd = stocks['ssfsd']
+				print(secucode.ljust(8), secuabbr.ljust(6), sgdm.ljust(12), fxsx.ljust(15), wsfx.ljust(12), 
+					sgsx.ljust(12), sgsz.ljust(15), sgjg.ljust(10), sgrq.ljust(4), fxsyl.ljust(6), wszql.ljust(10), 
+					zqhgbr.ljust(10), ssrq.ljust(10), srfsd.ljust(10), ts.ljust(6), ssfsd.ljust(6))
+			if i == int(webcontent['pageCount']):
+				break
+			i += 1
+
+	def datacwbb():
+		'高管薪酬'
+		'''
+		暂时只查了第一页的数据
+		'''
+		data_url = 'http://info.stcn.com/data/cwbb'
+		yearname = 2018	#要查询的年份
+		datas = {"cl": 13,"pageNostr": 1,"pages": 183,"pageNostr": 1,"ordernameclause": 32,"secuabbr":"" ,"t_year": yearname,"hydm": 0,"secucode": "代码/简称","gotopages":"" }
+		r = requests.post(url=data_url, data=datas, headers=headers)
+		# codestyle = requests.utils.get_encodings_from_content(r.text)[0]	#获取网页的实际编码格式
+		# r.encoding = codestyle	# 指定正确的编码格式
+		webcontent = r.text
+		# print(webcontent)
+		soup = BeautifulSoup(webcontent, "html.parser")	#转换成html格式
+		# --------------高管薪酬--------------
+		webcontent = soup.find('table', class_='tabstyle5')
+		topnews1 = webcontent.find_all('tr', class_=False)
+		topnews2 = webcontent.find_all('tr', class_='cover')
+		topnews = topnews1 + topnews2
+		#print(topnews)
+		for hotnew in topnews:
+			# print(hotnew)
+			secucode = hotnew.select('tr>td')[0].text
+			secname = hotnew.select('tr>td')[1].text
+			print(secucode, secname)
+			# --------------高管薪酬明细--------------
+			datas2 = {"cl": 14,"pageNostr": 1,"pages": 1,"pageNostr": 1,"ordernameclause": 32,"secuabbr":secname ,"t_year": yearname,"hydm": 0,"secucode": secucode,"gotopages":"" }
+			r = requests.post(url=data_url, data=datas2, headers=headers)
+			webcontent = r.text
+			soup = BeautifulSoup(webcontent, "html.parser")	#转换成html格式
+			# --------------高管薪酬--------------
+			try:
+				webcontent = soup.find('table', class_='tabstyle5')
+				selery1 = webcontent.find_all('tr', class_=False)
+				selery2 = webcontent.find_all('tr', class_='cover')
+				selery = selery1 + selery2
+
+				for usercount in selery:
+					# print(usercount)
+					userno = usercount.select('tr>td')[0].text 	# 高管序号
+					username = usercount.select('tr>td')[1].text 	# 高管名字
+					userposition = usercount.select('tr>td')[2].text 	# 高管职位
+					userselery = usercount.select('tr>td')[3].text 	# 高管薪酬
+					userselery = userselery.strip()
+					print(userno, username, userposition, userselery)
+					print('*'*50)
+			except:
+				print('暂无数据')
+			print('-'*50)
+
+	return kuaixun(), hotnews() ,stock(), finance(), datastcn(), stocktop(), newstock(), datacwbb()
+	# return datacwbb()
+
+
 
 if __name__ == '__main__':
 	STCN()
