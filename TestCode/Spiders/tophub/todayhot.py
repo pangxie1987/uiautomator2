@@ -2007,8 +2007,183 @@ def STCN():
 				print('暂无数据')
 			print('-'*50)
 
-	return kuaixun(), hotnews() ,stock(), finance(), datastcn(), stocktop(), newstock(), datacwbb()
-	# return datacwbb()
+	def hgt():
+		'沪股通'
+		hgt_url = 'http://hgt.stcn.com/'
+		i = 1
+		while 1:
+			r = requests.get(url=hgt_url+'index_%s.shtml'%i, headers=headers)
+			# codestyle = requests.utils.get_encodings_from_content(r.text)[0]	#获取网页的实际编码格式
+			# r.encoding = codestyle	# 指定正确的编码格式
+			webcontent = r.text
+			soup = BeautifulSoup(webcontent, "html.parser")	#转换成html格式
+			webcontent = soup.find('div', class_='qh3_con ww')
+			# --------------获取最大页数--------------
+			pagelist = webcontent.find('div', class_='pagelist')
+			pagelist = pagelist.find_all('li')
+			pagenum = []
+			for page in pagelist:
+				num = page.select('li>a')[0].get('href')
+				num = num.strip('http://hgt.stcn.com/index_')
+				num = num.strip('.shtml')
+				try:
+					pagenum.append(int(num))
+				except:
+					pass
+			pagenum.sort(reverse=True)
+			maxpage = pagenum[0]
+			print(maxpage)
+			# --------------获取新闻内容--------------
+			content = webcontent.find('ul')
+			content = content.find_all('li')
+			for hotnew in content:
+				timedesc = hotnew.select('li>span')[0].text
+				title = hotnew.select('li>a')[0].get('title')
+				link = hotnew.select('li>a')[0].get('href')
+				link = link.strip(' ')
+				print(timedesc, title, link)
+			if maxpage == i:
+				break
+			i += 1
+
+	def sgt():
+		'深股通'
+		sgt_url = 'http://sgt.stcn.com/'
+		i = 1
+		while 1:
+			r = requests.get(url=sgt_url+'index_%s.shtml'%i, headers=headers)
+			# codestyle = requests.utils.get_encodings_from_content(r.text)[0]	#获取网页的实际编码格式
+			# r.encoding = codestyle	# 指定正确的编码格式
+			webcontent = r.text
+			soup = BeautifulSoup(webcontent, "html.parser")	#转换成html格式
+			webcontent = soup.find('div', class_='qh3_con ww')
+			# --------------获取最大页数--------------
+			pagelist = webcontent.find('div', class_='pagelist')
+			pagelist = pagelist.find_all('li')
+			pagenum = []
+			for page in pagelist:
+				num = page.select('li>a')[0].get('href')
+				num = num.strip('http://hgt.stcn.com/index_')
+				num = num.strip('.shtml')
+				try:
+					pagenum.append(int(num))
+				except:
+					pass
+			pagenum.sort(reverse=True)
+			maxpage = pagenum[0]
+			print(maxpage)
+			# --------------获取新闻内容--------------
+			content = webcontent.find('ul')
+			content = content.find_all('li')
+			for hotnew in content:
+				timedesc = hotnew.select('li>span')[0].text
+				title = hotnew.select('li>a')[0].get('title')
+				link = hotnew.select('li>a')[0].get('href')
+				link = link.strip(' ')
+				print(timedesc, title, link)
+			if maxpage == i:
+				break
+			i += 1
+
+	def chinext():
+		'创业板'
+		chinext_url = 'http://chinext.stcn.com/'
+		i = 1
+		while 1:
+			r = requests.get(url=chinext_url+'index_%s.shtml'%i, headers=headers)
+			# codestyle = requests.utils.get_encodings_from_content(r.text)[0]	#获取网页的实际编码格式
+			# r.encoding = codestyle	# 指定正确的编码格式
+			webcontent = r.text
+			soup = BeautifulSoup(webcontent, "html.parser")	#转换成html格式
+			webcontent = soup.find('div', class_='x_tabBox ww')
+			# --------------获取最大页数--------------
+			pagelist = webcontent.find('div', class_='pagelist')
+			pagelist = pagelist.find_all('li')
+			pagenum = []
+			for page in pagelist:
+				num = page.select('li>a')[0].get('href')
+				num = num.strip('http://hgt.stcn.com/index_')
+				num = num.strip('.shtml')
+				try:
+					pagenum.append(int(num))
+				except:
+					pass
+			pagenum.sort(reverse=True)
+			maxpage = pagenum[0]
+			print(maxpage)
+			# --------------年报内容--------------
+			content = webcontent.find('ul')
+			content = content.find_all('li')
+			for hotnew in content:
+				timedesc = hotnew.select('li>span')[0].text
+				title = hotnew.select('li>a')[0].get('title')
+				link = hotnew.select('li>a')[0].get('href')
+				link = link.strip(' ')
+				print(timedesc, title, link)
+			if maxpage == i:
+				break
+			i += 1
+
+	def kcb():
+		'科创板'
+		kcb_url = 'http://kcb.stcn.com/'
+		r = requests.get(url=kcb_url, headers=headers)
+		# codestyle = requests.utils.get_encodings_from_content(r.text)[0]	#获取网页的实际编码格式
+		# r.encoding = codestyle	# 指定正确的编码格式
+		webcontent = r.text
+		soup = BeautifulSoup(webcontent, "html.parser")	#转换成html格式
+		# --------------信息披露--------------
+		print('--------------信息披露--------------')
+		xinpi = soup.find('div', class_='ind_xinpi clearfix')
+		# pagelist = webcontent.find('div', class_='pagelist')
+		xinpi_content = xinpi.find_all('li')
+		for content in xinpi_content:
+			timedesc = content.select('li>span')[0].text
+			link = content.select('li>a')[0].get('href')
+			title = content.select('li>a')[0].get('title')
+			print(timedesc, title, link)
+		# --------------发审动态--------------
+		print('--------------发审动态--------------')
+		fashen = soup.find('div', class_='fashen_dt clearfix')
+		# --------------发审动态-表头名称--------------
+		fashen_table = fashen.find('table', class_='tabstyle0')
+		table_head = fashen_table.find('tr', class_='tabhead0')	#表名
+		table_head = table_head.find_all('td')
+		names = ''
+		for table in table_head:
+			headname = table.text 
+			names = names+headname+' '*15
+		print(names)
+		# --------------发审动态-内容解析--------------
+		table_content1 = fashen_table.find_all('tr', class_='odd')
+		table_content2 = fashen_table.find_all('tr', class_=False)
+		# print(table_content1)
+		# print(table_content2)
+		table_content = table_content1 + table_content2
+		
+		for content in table_content:
+			content = content.find_all('td')
+			# print(content)
+			newslsit = ''
+			for news in content:
+				new = news.text 
+				newslsit = newslsit+new+' '*7
+			print(newslsit)
+
+		# --------------交易所通知--------------
+		print('--------------交易所通知--------------')
+		jiaoyisuo = soup.find('div', class_='jiaoyisuo clearfix')
+		jiaoyisuo = jiaoyisuo.find('div', class_='x_tabBoxW qh2_con clearfix')
+		# pagelist = webcontent.find('div', class_='pagelist')
+		jiaoyisuo_content = jiaoyisuo.find_all('li')
+		for content in jiaoyisuo_content:
+			timedesc = content.select('li>span')[0].text
+			link = content.select('li>a')[0].get('href')
+			title = content.select('li>a')[0].get('title')
+			print(timedesc, title, link)
+
+	return kuaixun(), hotnews() ,stock(), finance(), datastcn(), stocktop(), newstock(), datacwbb(), hgt(), sgt(), chinext(), kcb()
+	# return kcb()
 
 
 
