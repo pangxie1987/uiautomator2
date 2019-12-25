@@ -8,6 +8,7 @@ import requests
 import re
 import json
 import re
+import datetime
 from bs4 import BeautifulSoup
 
 def zhihu():
@@ -2185,7 +2186,311 @@ def STCN():
 	return kuaixun(), hotnews() ,stock(), finance(), datastcn(), stocktop(), newstock(), datacwbb(), hgt(), sgt(), chinext(), kcb()
 	# return kcb()
 
+def sse():
+	'上交所 http://www.sse.com.cn/'
+	headers = {
+			"user-agent":"Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.87 Safari/537.36", 
+			"Cookie":""
+		  }
+	sse_url = 'http://www.sse.com.cn/'
+	def yunhq():
+		'行情'
+		now = time.time()
+		yunhq_url = 'http://yunhq.sse.com.cn:32041//v1/sh1/list/self/000001_000016_000010_000009_000300'
+		datas = {'callback':'jQuery1124017165705535549503_1577172543561', 'select':'code,name,last,chg_rate,amount,open,prev_close', '_':now}
+		r = requests.get(url=yunhq_url, params=datas, headers=headers)
+		# codestyle = requests.utils.get_encodings_from_content(r.text)[0]	#获取网页的实际编码格式
+		# r.encoding = codestyle	# 指定正确的编码格式
+		webcontent = r.text
+		# print(webcontent)
+		pattern = re.compile('{"date":.*}')
+		webcontent = pattern.search(webcontent)
+		webcontent = webcontent.group()
+		webcontent = json.loads(webcontent)
+		print(' 代码  名称  今收  涨跌幅  成交额  今开  昨收')
+		for hq in webcontent['list']:
+			print(hq)
 
+	def tradedata():
+		'股票成交概况'
+		now = time.time()
+		today = datetime.datetime.now().date()
+		tradedata_url = 'http://query.sse.com.cn/marketdata/tradedata/queryNewTradingByProdTypeData.do'
+		datas = {'callback':'jsonpCallback34613', 'searchDate':today, 'prodType':'gp', '_':now}
+		r = requests.get(url=tradedata_url, params=datas, headers=headers)
+		# codestyle = requests.utils.get_encodings_from_content(r.text)[0]	#获取网页的实际编码格式
+		# r.encoding = codestyle	# 指定正确的编码格式
+		webcontent = r.text
+		print(webcontent)
+		pattern = re.compile('{"actionErrors":.*}')
+		webcontent = pattern.search(webcontent)
+		webcontent = webcontent.group()
+		webcontent = json.loads(webcontent)
+		# print(' 代码  名称  今收  涨跌幅  成交额  今开  昨收')
+		for hq in webcontent['result']:
+			print(hq)
+
+	def webupdate():
+		'各栏更新'
+		webupdate_url = 'http://www.sse.com.cn/home/webupdate/'
+		i = 1
+		while 1:
+			if i==1:
+				tishurl = 's_index.htm'
+			else:
+				tishurl = 's_index_%s.htm'%i
+			r = requests.get(url=webupdate_url+tishurl, headers=headers)
+			webcontent = r.text
+			soup = BeautifulSoup(webcontent, "html.parser")	#转换成html格式
+			# 获取总页数
+			webcontent = soup.find('div', id='sse_list_1')
+			pagecount = soup.find('div', id='createPage')
+			pagecount = pagecount.get("page_count")
+			print(pagecount)
+			# 解析内容
+			contents = webcontent.find_all('dd')
+			for new in contents:
+				timedesc = new.select('dd>span')[0].text 
+				title = new.select('dd>a')[0].get('title') 
+				link = new.select('dd>a')[0].get('href') 
+				print(timedesc, title.encode('ISO-8859-1').decode('utf-8'), link)
+				# print('*'*50)
+			if i == int(pagecount):
+				print('最后一页获取完成')
+				break
+			else:
+				i += 1
+
+	def hotandd():
+		'热点动态'
+		hotandd_url = 'http://www.sse.com.cn/aboutus/mediacenter/hotandd/'
+		i = 1
+		while 1:
+			if i==1:
+				tishurl = 's_index.htm'
+			else:
+				tishurl = 's_index_%s.htm'%i
+			r = requests.get(url=hotandd_url+tishurl, headers=headers)
+			webcontent = r.text
+			soup = BeautifulSoup(webcontent, "html.parser")	#转换成html格式
+			# 获取总页数
+			webcontent = soup.find('div', id='sse_list_1')
+			pagecount = soup.find('div', id='createPage')
+			pagecount = pagecount.get("page_count")
+			print(pagecount)
+			# 解析内容
+			contents = webcontent.find_all('dd')
+			for new in contents:
+				timedesc = new.select('dd>span')[0].text 
+				title = new.select('dd>a')[0].get('title') 
+				link = new.select('dd>a')[0].get('href') 
+				print(timedesc, title.encode('ISO-8859-1').decode('utf-8'), link)
+				# print('*'*50)
+			if i == int(pagecount):
+				print('最后一页获取完成')
+				break
+			else:
+				i += 1
+
+	def SpecialTips():
+		'停复牌提示'
+		now = time.time()
+		today = datetime.datetime.now().date()
+		tips_url = 'http://query.sse.com.cn/infodisplay/querySpecialTipsInfoByPage.do'
+		datas = {
+			'jsonCallBack':'jsonpCallback18562', 
+			'isPagination':'true',
+			'searchDate':today,
+			'bgFlag':1,
+			'searchDo':1,
+			'pageHelp.pageSize':25,
+			'pageHelp.pageNo':1,
+			'pageHelp.beginPage':1,
+			'pageHelp.cacheSize':1,
+			'pageHelp.endPage':5,
+			 '_':now
+			 }
+		headers['Referer'] = 'http://www.sse.com.cn/disclosure/dealinstruc/suspension/'
+		r = requests.get(url=tips_url, params=datas, headers=headers)
+		webcontent = r.text
+		soup = BeautifulSoup(webcontent, "html.parser")	#转换成html格式
+		webcontent = r.text
+		# print(webcontent)
+		pattern = re.compile('{"bgFlag":.*}')
+		webcontent = pattern.search(webcontent)
+		webcontent = webcontent.group()
+		contents = json.loads(webcontent)
+		# 解析内容
+		print('证券代码    证券简称    停(复)牌时间    停牌期限							停(复)牌原因')
+		for new in contents['result']:
+			productCode = new['productCode']
+			productName = new['productName']
+			stopTime = new['stopTime']	# 停牌期限
+			stopReason = new['stopReason']	#停(复)牌原因
+			stopDate = new['stopDate']	#停复牌时间
+			print(productCode.ljust(10), productName.ljust(8), stopDate.ljust(12), stopTime.ljust(35), stopReason)
+			# print('*'*50)
+
+	def calendar():
+		'市场日历-查询市场信息'
+		now = time.time()
+		today = time.strftime('%Y%m%d')
+		calendar_url = 'http://query.sse.com.cn/commonSoaQuery.do'
+		datas = {
+			'jsonCallBack':'jQuery112408916959178676822_1577235664059', 
+			'isPagination':'true',
+			'order':'tradeBeginDate|desc,stockCode|desc',
+			'tradeBeginDate':today,
+			'tradeEndDate':today,
+			'sqlId':'PL_SCRL_SCRLB',
+			'bizType':4,	# 1-IPO信息，7-停复牌信息，5-分红送转/除权除息，4-股东大会，3-e访谈信息，2-路演信息，
+			'pageHelp.pageSize':25,
+			'pageHelp.pageNo':1,
+			'pageHelp.beginPage':1,
+			'pageHelp.cacheSize':1,
+			'pageHelp.endPage':5,
+			 '_':now
+			 }
+		headers['Referer'] = 'http://www.sse.com.cn/disclosure/dealinstruc/calendar/'
+		r = requests.get(url=calendar_url, params=datas, headers=headers)
+		webcontent = r.text
+		soup = BeautifulSoup(webcontent, "html.parser")	#转换成html格式
+		webcontent = r.text
+		# print(webcontent)
+		pattern = re.compile('{"actionErrors":.*}')
+		webcontent = pattern.search(webcontent)
+		webcontent = webcontent.group()
+		contents = json.loads(webcontent)
+		# 解析内容
+		for new in contents['result']:
+			print(new)
+			print('*'*50)
+
+	def announcement():
+		'基金公告'
+		announcement_url = 'http://www.sse.com.cn/disclosure/fund/announcement/'
+		r = requests.get(url=announcement_url, headers=headers)
+		codestyle = requests.utils.get_encodings_from_content(r.text)[0]	#获取网页的实际编码格式
+		r.encoding = codestyle	# 指定正确的编码格式
+		webcontent = r.text
+		soup = BeautifulSoup(webcontent, "html.parser")	#转换成html格式
+		xinpi = soup.find('div', class_='sse_list_1')
+		# pagelist = webcontent.find('div', class_='pagelist')
+		xinpi_content = xinpi.find_all('dd')
+		for content in xinpi_content:
+			timedesc = content.select('dd>span')[0].text
+			link = content.select('dd>a')[0].get('href')
+			title = content.select('dd>a')[0].get('title')
+			print(timedesc, title, link)
+			print('*'*50)
+
+	return yunhq(), tradedata(), webupdate(), hotandd(), SpecialTips(), calendar(), announcement()
+	# return announcement()
+
+def szse():
+	'深交所 http://www.szse.cn/'
+	headers = {
+			"user-agent":"Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.87 Safari/537.36", 
+			"Cookie":""
+		  }
+	szse_url = 'http://www.szse.cn/'
+	def tech_guide():
+		'技术指南 http://www.szse.cn/marketServices/technicalservice/guide'
+		guide_url = 'http://www.szse.cn/api/search/content'
+		# while 1:
+		datas = {'keyword':'', 'time':0, 'range':'title', 'channelCode[]':'technicalGuide_hidden', 'currentPage':1, 'pageSize':20}
+		i = 1
+		while 1:
+			datas['currentPage'] = i
+			r = requests.post(url=guide_url, data=datas,params={'random':'0.6115615140687631'}, headers=headers)
+			# codestyle = requests.utils.get_encodings_from_content(r.text)[0]	#获取网页的实际编码格式
+			# r.encoding = codestyle	# 指定正确的编码格式
+			# print(r.text)
+			webcontent = r.json()
+			for content in webcontent['data']:
+				doctitle = content['doctitle']
+				docpuburl = content['docpuburl']
+				docpubtime = content['docpubtime']
+				# 将时间格式化成YY-MM-DD格式
+				docpubtime = str(docpubtime).strip('000')
+				docpubtime = time.localtime(int(docpubtime))
+				docpubtime = time.strftime("%Y-%m-%d", docpubtime)
+				print(docpubtime ,doctitle, docpuburl)
+				print('*'*50)
+			pageSize = webcontent['pageSize']
+			totalSize = webcontent['totalSize']
+			if pageSize*i > totalSize:
+				print('请求完成')
+				break
+			else:
+				i += 1
+
+	def tech_notice():
+		'技术公告 http://www.szse.cn/marketServices/technicalservice/notice/'
+		notice_url = 'http://www.szse.cn/api/search/content'
+		# while 1:
+		datas = {'keyword':'', 'time':0, 'range':'title', 'channelCode[]':'technicalLatestNotice', 'currentPage':1, 'pageSize':20}
+		i = 1
+		while 1:
+			datas['currentPage'] = i
+			r = requests.post(url=notice_url, data=datas,params={'random':'0.6115615140687631'}, headers=headers)
+			# codestyle = requests.utils.get_encodings_from_content(r.text)[0]	#获取网页的实际编码格式
+			# r.encoding = codestyle	# 指定正确的编码格式
+			# print(r.text)
+			webcontent = r.json()
+			for content in webcontent['data']:
+				doctitle = content['doctitle']
+				docpuburl = content['docpuburl']
+				docpubtime = content['docpubtime']
+				# 将时间格式化成YY-MM-DD格式
+				docpubtime = docpubtime//1000	#去掉最后三个0
+				docpubtime = time.localtime(int(docpubtime))
+				docpubtime = time.strftime("%Y-%m-%d", docpubtime)
+				print(docpubtime ,doctitle, docpuburl)
+				print('*'*50)
+			
+			pageSize = webcontent['pageSize']
+			totalSize = webcontent['totalSize']
+			print(pageSize, totalSize)
+			if pageSize*i > totalSize:
+				print('请求完成')
+				break
+			else:
+				i += 1
+
+	def dataInterface():
+		'数据接口 http://www.szse.cn/marketServices/technicalservice/interface/'
+		notice_url = 'http://www.szse.cn/api/search/content'
+		# while 1:
+		datas = {'keyword':'', 'time':0, 'range':'title', 'channelCode[]':'dataInterface_hidden', 'currentPage':1, 'pageSize':20}
+		i = 1
+		while 1:
+			datas['currentPage'] = i
+			r = requests.post(url=notice_url, data=datas,params={'random':'0.6115615140687631'}, headers=headers)
+			# codestyle = requests.utils.get_encodings_from_content(r.text)[0]	#获取网页的实际编码格式
+			# r.encoding = codestyle	# 指定正确的编码格式
+			# print(r.text)
+			webcontent = r.json()
+			for content in webcontent['data']:
+				doctitle = content['doctitle']
+				docpuburl = content['docpuburl']
+				docpubtime = content['docpubtime']
+				# 将时间格式化成YY-MM-DD格式
+				docpubtime = docpubtime//1000	#去掉最后三个0
+				docpubtime = time.localtime(int(docpubtime))
+				docpubtime = time.strftime("%Y-%m-%d", docpubtime)
+				print(docpubtime ,doctitle, docpuburl)
+				print('*'*50)
+			pageSize = webcontent['pageSize']
+			totalSize = webcontent['totalSize']
+			if pageSize*i > totalSize:
+				print('请求完成')
+				break
+			else:
+				i += 1
+
+	# return tech_guide(), tech_notice(), dataInterface()
+	return dataInterface()
 
 if __name__ == '__main__':
-	STCN()
+	sse()
