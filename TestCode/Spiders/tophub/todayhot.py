@@ -2492,5 +2492,28 @@ def szse():
 	# return tech_guide(), tech_notice(), dataInterface()
 	return dataInterface()
 
+def chouti():
+	'抽屉新热榜 https://dig.chouti.com/'
+	headers = {
+			"user-agent":"Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.87 Safari/537.36", 
+			"Cookie":""
+		  }
+	chouti_url = 'https://dig.chouti.com'
+	now = time.time()
+	def tophot():
+		'热榜'
+		hottime = ['24hr', '72hr', '168hr']
+		for tt in hottime:
+			r = requests.get(url=chouti_url+'/top/%s'%tt, params={'_':now}, headers=headers)
+			webcontent = r.json()
+			print('+++++++++++++++%s热榜+++++++++++++++'%tt)
+			for modules in webcontent['data']:
+				title = modules['title']
+				link = modules['originalUrl']
+				print(title, link)
+				print('*'*50)
+
+	return tophot()
+
 if __name__ == '__main__':
-	sse()
+	chouti()
