@@ -2515,5 +2515,74 @@ def chouti():
 
 	return tophot()
 
+def kanshangjie():
+	'商界 http://www.kanshangjie.com/'
+	headers = {
+			"user-agent":"Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.87 Safari/537.36", 
+			"Cookie":""
+		  }
+	chouti_url = 'http://www.kanshangjie.com/api.php'
+	def jingxuan():
+		'精选'
+		r = requests.get(url=chouti_url, params={'op':'util_api', 'ac':'autoload', 'p':1, 'catid':3670, 'q':''}, headers=headers)
+		webcontent = r.json()
+		# print('+++++++++++++++热榜+++++++++++++++')
+		for modules in webcontent:
+			title = modules['title']
+			link = modules['url']
+			print(title, link)
+			print('*'*50)
+
+	def kuaisun():
+		'24h快讯'
+		url = 'http://www.kanshangjie.com/'
+		r = requests.get(url=url, headers=headers)
+		codestyle = requests.utils.get_encodings_from_content(r.text)[0]	#获取网页的实际编码格式
+		r.encoding = codestyle	# 指定正确的编码格式
+		webcontent = r.text
+		soup = BeautifulSoup(webcontent, "html.parser")	#转换成html格式
+		xinpi = soup.find('div', class_='hours')
+		# pagelist = webcontent.find('div', class_='pagelist')
+		xinpi_content = xinpi.find_all('li')
+		for content in xinpi_content:
+			try:
+				link = content.select('li>a')[0].get('href')
+				title = content.select('li>a')[0].text
+				print(title, link)
+				print('*'*50)
+			except:
+				break
+
+	return jingxuan(), kuaisun()
+
+def feiyan():
+	'新型肺炎疫情数据 https://c.m.163.com/ug/api/wuhan/app/data/list-total'
+	headers = {
+			"user-agent":"Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.87 Safari/537.36", 
+			"Cookie":""
+		  }
+	url = 'https://c.m.163.com/ug/api/wuhan/app/data/list-total'
+	r = requests.get(url=url, headers=headers)
+	webcontent = r.json()
+	chinatotal = r.json()['data']['chinaTotal']['total']
+	chinatotay = r.json()['data']['chinaTotal']['today']
+	total = chinatotal['confirm']
+	dead = chinatotal['dead']
+	heal = chinatotal['heal']
+	suspect = chinatotal['suspect']
+
+	total_new = chinatotay['confirm']
+	dead_new = chinatotay['dead']
+	heal_new = chinatotay['heal']
+	suspect_new = chinatotay['suspect']
+	print(total_new,dead_new,heal_new,suspect_new)
+	print('确诊：{}-{}，疑似：{}-{}，死亡：{}-{}，治愈：{}-{}'.format(total,total_new,suspect,suspect_new,dead,dead_new,heal,heal_new))
+	# print('+++++++++++++++热榜+++++++++++++++')
+	# for modules in webcontent:
+	# 	title = modules['title']
+	# 	link = modules['url']
+	# 	print(title, link)
+	# 	print('*'*50)
+
 if __name__ == '__main__':
-	chouti()
+	feiyan()
