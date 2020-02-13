@@ -2556,33 +2556,245 @@ def kanshangjie():
 	return jingxuan(), kuaisun()
 
 def feiyan():
-	'新型肺炎疫情数据 https://c.m.163.com/ug/api/wuhan/app/data/list-total'
+	'新型肺炎疫情数据'
 	headers = {
 			"user-agent":"Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.87 Safari/537.36", 
 			"Cookie":""
 		  }
-	url = 'https://c.m.163.com/ug/api/wuhan/app/data/list-total'
-	r = requests.get(url=url, headers=headers)
-	webcontent = r.json()
-	chinatotal = r.json()['data']['chinaTotal']['total']
-	chinatotay = r.json()['data']['chinaTotal']['today']
-	total = chinatotal['confirm']
-	dead = chinatotal['dead']
-	heal = chinatotal['heal']
-	suspect = chinatotal['suspect']
 
-	total_new = chinatotay['confirm']
-	dead_new = chinatotay['dead']
-	heal_new = chinatotay['heal']
-	suspect_new = chinatotay['suspect']
-	print(total_new,dead_new,heal_new,suspect_new)
-	print('确诊：{}-{}，疑似：{}-{}，死亡：{}-{}，治愈：{}-{}'.format(total,total_new,suspect,suspect_new,dead,dead_new,heal,heal_new))
-	# print('+++++++++++++++热榜+++++++++++++++')
-	# for modules in webcontent:
-	# 	title = modules['title']
-	# 	link = modules['url']
-	# 	print(title, link)
-	# 	print('*'*50)
+	def feiyan_163():
+		'来自163的数据'
+		url = 'https://c.m.163.com/ug/api/wuhan/app/data/list-total'
+		r = requests.get(url=url, headers=headers)
+		webcontent = r.json()
+		chinatotal = r.json()['data']['chinaTotal']['total']
+		chinatotay = r.json()['data']['chinaTotal']['today']
+		total = chinatotal['confirm']
+		dead = chinatotal['dead']
+		heal = chinatotal['heal']
+		suspect = chinatotal['suspect']
+
+		total_new = chinatotay['confirm']
+		dead_new = chinatotay['dead']
+		heal_new = chinatotay['heal']
+		suspect_new = chinatotay['suspect']
+		print(total_new,dead_new,heal_new,suspect_new)
+		print('确诊：{}-{}，疑似：{}-{}，死亡：{}-{}，治愈：{}-{}'.format(total,total_new,suspect,suspect_new,dead,dead_new,heal,heal_new))
+
+	def feiyan_ndb():
+		'来自每日经济网的数据'
+		today = datetime.date.today()
+		url = 'http://www.nbd.com.cn/zhuanti/feiyan_day_records.json'
+		r = requests.get(url=url, headers=headers)
+		webcontent = r.json()['records']
+		for data in webcontent:
+			record_date = data['record_date']
+			total = data['certain']
+			total_new = data['certain_incr']
+			dead = data['death']
+			heal = data['cure']
+			suspect = data['uncertain']
+			suspect_new = data['uncertain_incr']
+			severe = data['severe']
+			severe_new = data['severe_incr']
+			print('时间：{}，确诊：{}-{}，疑似：{}-{}，死亡：{}，治愈：{}，重症{}-{}'.format(record_date,total,total_new,suspect,suspect_new,dead,heal,severe,severe_new))
+	def feiyan_ndb_article():
+		'来自每日经济网的数据_权威发布'
+		url = 'http://www.nbd.com.cn/columns/1190/articles_list_for_zhuanti.json'
+		datas = {'with_content':1, 'per':50, 'page_index':1}
+		r = requests.get(url=url, params=datas ,headers=headers)
+		webcontent = r.json()
+		for new in webcontent:
+			title = new['title']
+			link = new['article_url']
+			publish_time = new['additional_text']
+			print(publish_time, title, link)
+
+	def feiyan_ndb_anosugartech():
+		'来自每日经济网的数据_确诊信息'
+		url = 'http://2019ncov.nosugartech.com/data.json'
+		r = requests.get(url=url, headers=headers)
+		webcontent = r.json()['data']
+		for new in webcontent:
+			title1 = new['t_no']
+			title2 = new['t_no_sub']
+			title3 = new['t_pos_end']
+			title4 = new['t_pos_start']
+			who = new['who']
+			publish_time = new['t_end']
+			print(title1, title2, title3, title4, who, publish_time)
+
+	def feiyan_ndb_world():
+		'来自每日经济网的数据_全球信息'
+		url = 'http://www.nbd.com.cn/zhuanti/cfg_stores/get_by_activity_name'
+		datas = {'activity_name':'2020feiyan_peaple_world', 'cfg_type':'array'}
+		r = requests.get(url=url, params=datas, headers=headers)
+		webcontent = r.json()['cfg']
+		print('地区  确诊  死亡  治愈')
+		for new in webcontent:
+			provinceName = new['provinceName']
+			confirmedCount = new['confirmedCount']
+			deadCount = new['deadCount']
+			curedCount = new['curedCount']
+			print(provinceName, confirmedCount, deadCount, curedCount)
+
+	def feiyan_ndb_china():
+		'来自每日经济网的数据_国内信息'
+		url = 'http://www.nbd.com.cn/zhuanti/cfg_stores/get_by_activity_name'
+		datas = {'activity_name':'2020feiyan_peaple_province', 'cfg_type':'array'}
+		r = requests.get(url=url, params=datas, headers=headers)
+		webcontent = r.json()['cfg']
+		print('地区  确诊  死亡  治愈')
+		for new in webcontent:
+			provinceName = new['provinceName']
+			confirmedCount = new['confirmedCount']
+			deadCount = new['deadCount']
+			curedCount = new['curedCount']
+			print(provinceName, confirmedCount, deadCount, curedCount)
+
+	# return feiyan_163(), feiyan_ndb(), feiyan_ndb_article(), feiyan_ndb_anosugartech(), feiyan_ndb_world(), feiyan_ndb_china()
+	return feiyan_ndb_world(),feiyan_ndb_china()
+
+def fortunechina():
+		'财富'
+		headers = {
+			"user-agent":"Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.87 Safari/537.36", 
+			"Cookie":""
+		  }
+		def world500():
+			'2019世界500强'
+			url = 'http://www.fortunechina.com/fortune500/c/2019-07/22/content_339535.htm'
+			r = requests.get(url=url, headers=headers)
+			codestyle = requests.utils.get_encodings_from_content(r.text)[0]	#获取网页的实际编码格式
+			r.encoding = codestyle	# 指定正确的编码格式
+			webcontent = r.text
+			soup = BeautifulSoup(webcontent, "html.parser")	#转换成html格式
+			xinpi = soup.find('table', id='yytable')
+			xinpi_content = xinpi.find('tbody')
+			# print(xinpi_content)
+			contents = xinpi_content.find_all('tr')
+			# print(contents)
+			print('排名 上年排名  公司名称    营收(百万美元)    利润(百万美元)    国家')
+			for content in contents:
+				# print(content)
+				items = content.find_all('td')
+				ranking = items[0].text 	# 排名
+				ranking_last = items[1].text 	# 去年排名
+				name = items[2].text 	# 公司
+				revenue = items[3].text 	# 营收
+				profit = items[4].text 	#利润
+				country = items[5].text 	#国家
+				print(ranking+''*5, ranking_last, name, revenue, profit, country)
+				print('*'*50)
+
+		def china500():
+			'2019中国500强'
+			url = 'http://www.fortunechina.com/fortune500/c/2019-07/10/content_337536.htm'
+			r = requests.get(url=url, headers=headers)
+			codestyle = requests.utils.get_encodings_from_content(r.text)[0]	#获取网页的实际编码格式
+			r.encoding = codestyle	# 指定正确的编码格式
+			webcontent = r.text
+			soup = BeautifulSoup(webcontent, "html.parser")	#转换成html格式
+			xinpi = soup.find('table', id='table1')
+			xinpi_content = xinpi.find('tbody')
+			contents = xinpi_content.find_all('tr')
+			print('排名 上年排名  公司名称    营收(百万元)    利润(百万元)')
+			for content in contents:
+				# print(content)
+				items = content.find_all('td')
+				ranking = items[0].text 	# 排名
+				ranking_last = items[1].text 	# 去年排名
+				name = items[2].text 	# 公司
+				revenue = items[3].text 	# 营收
+				profit = items[4].text 	#利润
+				print(ranking+''*5, ranking_last, name, revenue, profit)
+				print('*'*50)
+
+		def china500_deficit():
+			'2019中国500强中的亏损企业'
+			url = 'http://www.fortunechina.com/fortune500/c/2019-07/10/content_337559.htm'
+			r = requests.get(url=url, headers=headers)
+			codestyle = requests.utils.get_encodings_from_content(r.text)[0]	#获取网页的实际编码格式
+			r.encoding = codestyle	# 指定正确的编码格式
+			webcontent = r.text
+			soup = BeautifulSoup(webcontent, "html.parser")	#转换成html格式
+			xinpi = soup.find('table', class_='rankingtable')
+			xinpi_content = xinpi.find('tbody')
+			contents = xinpi_content.find_all('tr')
+			# print('排名 公司名称   亏损金额(百万元)')
+			for content in contents[1:]:
+				# print(content)
+				items = content.find_all('td')
+				ranking = items[0].text 	# 排名
+				name = items[1].text 	# 公司
+				profit = items[2].text 	#利润
+				print(ranking+''*5, name, profit)
+				print('*'*50)
+
+		def china500_profit():
+			'2019中国500强中利润最高的企业'
+			url = 'http://www.fortunechina.com/fortune500/c/2019-07/10/content_337557.htm'
+			r = requests.get(url=url, headers=headers)
+			codestyle = requests.utils.get_encodings_from_content(r.text)[0]	#获取网页的实际编码格式
+			r.encoding = codestyle	# 指定正确的编码格式
+			webcontent = r.text
+			soup = BeautifulSoup(webcontent, "html.parser")	#转换成html格式
+			xinpi = soup.find('table', class_='rankingtable')
+			xinpi_content = xinpi.find('tbody')
+			contents = xinpi_content.find_all('tr')
+			print('排名 公司名称  利润率')
+			for content in contents[1:]:
+				# print(content)
+				items = content.find_all('td')
+				ranking = items[0].text 	# 排名
+				name = items[1].text 	# 公司
+				profit = items[2].text 	#利润
+				print(ranking+''*5, name, profit)
+				print('*'*50)
+		return world500(), china500(), china500_deficit(), china500_profit()
+
+def huanqiu():
+	'环球网 https://www.huanqiu.com/'
+	headers = {
+			"user-agent":"Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.87 Safari/537.36", 
+			"Cookie":""
+		  }
+
+	def chiannews():
+		'国内新闻'
+		url = 'https://china.huanqiu.com/api/list'
+		datas = {'offset':0, 'limit':40}
+		r = requests.get(url=url, headers=headers, params=datas)
+		webcontent = r.json()
+		# print(webcontent)
+		for new in webcontent['list']:
+			if len(new)  == 0:
+				break
+			else:
+				title = new['title']
+				summary = new['summary']
+				link = 'https://china.huanqiu.com/article/'+new['aid']
+				print(title, summary, link)
+				print('*'*50)
+
+	def worldnews():
+		'国际新闻'
+		url = 'https://world.huanqiu.com/api/list'
+		datas = {'offset':0, 'limit':40}
+		r = requests.get(url=url, headers=headers, params=datas)
+		webcontent = r.json()
+		# print(webcontent)
+		for new in webcontent['list']:
+			if len(new)  == 0:
+				break
+			else:
+				title = new['title']
+				summary = new['summary']
+				link = 'https://world.huanqiu.com/article/'+new['aid']
+				print(title, summary, link)
+				print('*'*50)
+	
+	return chiannews(), worldnews()
 
 if __name__ == '__main__':
 	feiyan()
