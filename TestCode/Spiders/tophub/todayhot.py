@@ -11,6 +11,11 @@ import re
 import datetime
 from bs4 import BeautifulSoup
 
+headers = {
+			"user-agent":"Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.87 Safari/537.36", 
+			"Cookie":""
+		  }
+
 def zhihu():
 	'知乎热榜信息'
 	zhihu_url = 'https://www.zhihu.com/billboard'
@@ -2796,5 +2801,48 @@ def huanqiu():
 	
 	return chiannews(), worldnews()
 
+def  traffic():
+	'交通安全综合服务管理平台-上海'
+	url = 'https://sh.122.gov.cn/'
+	r = requests.post(url=url+'m/page/publicity/list', headers=headers)
+	webcontent = r.json()['data']
+	# print(webcontent)
+	# -----------业务热点-----------
+	manuals = webcontent['manuals']
+	for new in manuals:
+		print(new['wjm'], url+new['wjlj'])
+	# -----------信息公告-----------
+	bulletions = webcontent['bulletions']
+	for new in bulletions:
+		print(new['wjm'], new['scsj'], url+new['wjlj'])
+	# -----------信息公布-----------
+	publishs = webcontent['publishs']
+	for new in publishs:
+		print(new['wjm'], new['scsj'], url+new['wjlj'])
+
+	# 交管动态
+	datas = {'path':'jgdt', 'page':1, 'size':50}
+	r = requests.post(url=url+'m/page/news/getDetails', data=datas, headers=headers)
+
+	webcontent = r.json()['data']['pageList']['list']
+	print('-'*20,'交管动态','-'*20)
+	for new in webcontent:
+		title = new['title']
+		link = url+new['link']
+		releasedate = new['releasDate']
+		print(title, releasedate, link)
+
+	# 警示教育
+	datas['path']='jsjy'
+	r = requests.post(url=url+'m/page/news/getDetails', data=datas, headers=headers)
+
+	webcontent = r.json()['data']['pageList']['list']
+	print('-'*20,'警示教育','-'*20)
+	for new in webcontent:
+		title = new['title']
+		link = url+new['link']
+		releasedate = new['releasDate']
+		print(title, releasedate, link)
+
 if __name__ == '__main__':
-	feiyan()
+	traffic()
