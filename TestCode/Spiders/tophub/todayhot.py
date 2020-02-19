@@ -2844,5 +2844,329 @@ def  traffic():
 		releasedate = new['releasDate']
 		print(title, releasedate, link)
 
+def police_gov():
+	'中华人民共和国公安部'
+	headers['Cookie'] = "maxPageNum5097045=265; __jsluid_h=dfabaa396a9ed9f7b7ef8fb3cec53cf8; __jsluid_s=7bac328a51598b8152d0510fe02003d7; zh_choose=n; __FTabceffgh=2020-2-18-15-28-6; __NRUabceffgh=1582010886328; __RTabceffgh=2020-2-18-15-28-6; __jsl_clearance=1582078286.144|0|IteI1qyai4zO%2B4sF4%2F%2F7vsRA%2Bag%3D"
+	url = 'https://www.mps.gov.cn/'
+	# --------------公安要闻--------------
+	r = requests.get(url=url+'n2253534/n2253535/index.html', headers=headers)
+	codestyle = requests.utils.get_encodings_from_content(r.text)[0]	#获取网页的实际编码格式
+	r.encoding = codestyle	# 指定正确的编码格式
+	# print(codestyle)
+	webcontent = r.text
+	soup = BeautifulSoup(webcontent, "html.parser")	#转换成html格式
+	print('-'*20,'公安要闻','-'*20)
+	xinpi = soup.find('span', id='comp_5097045')
+	# xinpi_content = xinpi.find('tbody')
+	contents = xinpi.find_all('dd')
+	#print(contents)
+	for content in contents:
+		releasedate = content.select('span')[0].text
+		releasedate = releasedate.strip('()')
+		title = content.find('a').text
+		link = content.find('a').get('href')
+		link = link.replace('../../', url)
+		print(releasedate, title, link)
+
+	# --------------各地警务--------------
+	r = requests.get(url=url+'n2253534/n4904351/index.html', headers=headers)
+	codestyle = requests.utils.get_encodings_from_content(r.text)[0]	#获取网页的实际编码格式
+	r.encoding = codestyle	# 指定正确的编码格式
+	# print(codestyle)
+	webcontent = r.text
+	soup = BeautifulSoup(webcontent, "html.parser")	#转换成html格式
+	print('-'*20,'各地警务','-'*20)
+	xinpi = soup.find('span', id='comp_3497341')
+	# xinpi_content = xinpi.find('tbody')
+	contents = xinpi.find_all('dd')
+	#print(contents)
+	for content in contents:
+		releasedate = content.select('span')[0].text
+		releasedate = releasedate.strip('()')
+		title = content.find('a').text
+		link = content.find('a').get('href')
+		link = link.replace('../../', url)
+		print(releasedate, title, link)
+
+	# --------------工作动态--------------
+	r = requests.get(url=url+'n2254098/n4904352/index.html', headers=headers)
+	codestyle = requests.utils.get_encodings_from_content(r.text)[0]	#获取网页的实际编码格式
+	r.encoding = codestyle	# 指定正确的编码格式
+	# print(codestyle)
+	webcontent = r.text
+	soup = BeautifulSoup(webcontent, "html.parser")	#转换成html格式
+	print('-'*20,'工作动态','-'*20)
+	xinpi = soup.find('span', id='comp_3497341')
+	# xinpi_content = xinpi.find('tbody')
+	contents = xinpi.find_all('dd')
+	#print(contents)
+	for content in contents:
+		releasedate = content.select('span')[0].text
+		releasedate = releasedate.strip('()')
+		title = content.find('a').text
+		link = content.find('a').get('href')
+		link = link.replace('../../', url)
+		print(releasedate, title, link)
+
+	# --------------警方提示--------------
+	r = requests.get(url=url+'n2253534/n2253543/index.html', headers=headers)
+	codestyle = requests.utils.get_encodings_from_content(r.text)[0]	#获取网页的实际编码格式
+	r.encoding = codestyle	# 指定正确的编码格式
+	# print(codestyle)
+	webcontent = r.text
+	soup = BeautifulSoup(webcontent, "html.parser")	#转换成html格式
+	print('-'*20,'警方提示','-'*20)
+	xinpi = soup.find('span', id='comp_3497341')
+	# xinpi_content = xinpi.find('tbody')
+	contents = xinpi.find_all('dd')
+	#print(contents)
+	for content in contents:
+		releasedate = content.select('span')[0].text
+		releasedate = releasedate.strip('()')
+		title = content.find('a').text
+		link = content.find('a').get('href')
+		link = link.replace('../../', url)
+		print(releasedate, title, link)
+
+	# --------------人事信息--------------
+	r = requests.get(url=url+'n2254314/n4904354/index.html', headers=headers)
+	codestyle = requests.utils.get_encodings_from_content(r.text)[0]	#获取网页的实际编码格式
+	r.encoding = codestyle	# 指定正确的编码格式
+	# print(codestyle)
+	webcontent = r.text
+	soup = BeautifulSoup(webcontent, "html.parser")	#转换成html格式
+	print('-'*20,'人事信息','-'*20)
+	xinpi = soup.find('span', id='comp_3497341')
+	# xinpi_content = xinpi.find('tbody')
+	contents = xinpi.find_all('dd')
+	#print(contents)
+	for content in contents:
+		releasedate = content.select('span')[0].text
+		releasedate = releasedate.strip('()')
+		title = content.find('a').text
+		link = content.find('a').get('href')
+		link = link.replace('../../', url)
+		print(releasedate, title, link)
+
+def yangmaoduo():
+	'薅羊毛'
+	url = 'http://www.yangmaoduo.com/'
+	# --------------获取每页的url--------------
+	r = requests.get(url=url, headers=headers)
+	codestyle = requests.utils.get_encodings_from_content(r.text)[0]	#获取网页的实际编码格式
+	r.encoding = codestyle	# 指定正确的编码格式
+	# print(codestyle)
+	webcontent = r.text
+	soup = BeautifulSoup(webcontent, "html.parser")	#转换成html格式
+	xinpi = soup.find('div', class_='pagebar')
+	# xinpi_content = xinpi.find('tbody')
+	contents = xinpi.find_all('a', href=True)
+	# print(contents)
+	pagenum = 1
+	for content in contents:
+		page = content.get('href')	# 获取翻页的url
+
+		print('正在获取第{}页,url={}'.format(pagenum,page))
+		# --------------页面内容--------------
+		r = requests.get(url=page, headers=headers)
+		codestyle = requests.utils.get_encodings_from_content(r.text)[0]	#获取网页的实际编码格式
+		r.encoding = codestyle	# 指定正确的编码格式
+		# print(codestyle)
+		webcontent = r.text
+		pagenum += 1
+		soup = BeautifulSoup(webcontent, "html.parser")	#转换成html格式
+		xinpi = soup.find('div', id='lieb')
+		# xinpi_content = xinpi.find('tbody')
+		contents = xinpi.find_all('dl')
+		# print(contents)
+		for content in contents:
+			#print(content)
+			title = content.select('dl>dt>h2>a')[0].text
+			link = content.select('dl>dt>h2>a')[0].get('href')
+			desc = content.select('dl>dd>p')[0].text
+			print(title, desc, link)
+
+def xianbao():
+	'线报网'
+	url = 'https://www.52xianbao.com/'
+	for i in range(1,4):
+		'请求前三页数据'
+		r = requests.get(url=url+'/page/%s'%i, headers=headers)
+		print('正在获取第{}页,url={}'.format(i,r.url))
+		codestyle = requests.utils.get_encodings_from_content(r.text)[0]	#获取网页的实际编码格式
+		r.encoding = codestyle	# 指定正确的编码格式
+		# print(codestyle)
+		webcontent = r.text
+		soup = BeautifulSoup(webcontent, "html.parser")	#转换成html格式
+		contents = soup.find_all('article', class_=True)
+		for content in contents:
+			news = content.find('h2')
+			new = news.find_all('a')
+			if len(new) > 1:
+				title = new[1].text
+				link = new[1].get('href')
+			else:
+				title = new[0].text
+				link = new[0].get('href')
+			print(title, link)
+
+def card111():
+	'信用卡论坛'
+	url = 'https://www.card111.com/'
+	# --------------热门帖子--------------
+	print('-'*20,'热门帖子','-'*20)
+	r = requests.get(url=url+'forum.php', headers=headers)
+	codestyle = requests.utils.get_encodings_from_content(r.text)[0]	#获取网页的实际编码格式
+	r.encoding = codestyle	# 指定正确的编码格式
+	# print(codestyle)
+	webcontent = r.text
+	soup = BeautifulSoup(webcontent, "html.parser")	#转换成html格式
+	xinpi = soup.find('div', id='portal_block_107')
+	contents = xinpi.find_all('li')
+	for content in contents:
+		new = content.find_all('a')
+		title = new[1].text
+		link = new[1].get('href')
+		desc = new[0].text
+		print(desc, title, link)
+
+	# --------------资讯--------------
+	print('-'*20,'资讯','-'*20)
+	datas = {'mod':'list', 'catid':2}
+	r = requests.get(url=url+'portal.php', params=datas, headers=headers)
+	codestyle = requests.utils.get_encodings_from_content(r.text)[0]	#获取网页的实际编码格式
+	r.encoding = codestyle	# 指定正确的编码格式
+	# print(codestyle)
+	webcontent = r.text
+	soup = BeautifulSoup(webcontent, "html.parser")	#转换成html格式
+	xinpi = soup.find('div', class_='deanpiclist top15')
+	contents = xinpi.find_all('li')
+	for content in contents:
+		new = content.select('li>div>div')[1]
+		title = new.select('div>h2')[0].text
+		link = new.select('div>h2')[0].get('href')
+		print(title, link)
+
+def earnews():
+	'赚钱资讯网'
+	url = 'https://www.earnews.cn/'
+	# --------------最新资讯--------------
+	print('-'*20,'最新资讯','-'*20)
+	r = requests.get(url=url+'article/index.html', headers=headers)
+	codestyle = requests.utils.get_encodings_from_content(r.text)[0]	#获取网页的实际编码格式
+	r.encoding = codestyle	# 指定正确的编码格式
+	# print(codestyle)
+	webcontent = r.text
+	soup = BeautifulSoup(webcontent, "html.parser")	#转换成html格式
+	xinpi = soup.find('div', class_='art_sheet list')
+	contents = xinpi.find_all('div', style='padding-bottom:5px;padding-left:0px;float:left;')
+	for content in contents:
+		new = content.select('div>a')[0]
+		title = new.get('title')
+		link = new.get('href')
+		print(title, link)
+
+	# --------------最新文章--------------
+	print('-'*20,'最新文章','-'*20)
+	tuijian = soup.find_all('div', class_='box list')[2]
+	tuijian = tuijian.find('div', class_='main')
+	contents = tuijian.find_all('div')
+	for content in contents:
+		title = content.select('a')[0].get('title')
+		link = content.select('a')[0].get('href')
+		link = url+link
+		print(title, link)
+
+	# --------------推荐文章--------------
+	print('-'*20,'推荐文章','-'*20)
+	tuijian = soup.find_all('div', class_='box list')[4]
+	tuijian = tuijian.find('div', class_='main')
+	contents = tuijian.find_all('div')
+	for content in contents:
+		title = content.select('a')[0].get('title')
+		link = content.select('a')[0].get('href')
+		link = url+link
+		print(title, link)
+
+	# --------------金融理财--------------
+	print('-'*20,'金融理财','-'*20)
+	r = requests.get(url=url+'article/cat-1/index.html', headers=headers)
+	codestyle = requests.utils.get_encodings_from_content(r.text)[0]	#获取网页的实际编码格式
+	r.encoding = codestyle	# 指定正确的编码格式
+	# print(codestyle)
+	webcontent = r.text
+	soup = BeautifulSoup(webcontent, "html.parser")	#转换成html格式
+	xinpi = soup.find('div', class_='art_sheet list')
+	contents = xinpi.find_all('div', style='padding-bottom:5px;padding-left:0px;float:left;')
+	for content in contents:
+		new = content.select('div>a')[0]
+		title = new.get('title')
+		link = new.get('href')
+		print(title, link)
+
+	# --------------应用频道--------------
+	print('-'*20,'应用频道','-'*20)
+	r = requests.get(url=url+'article/cat-2/index.html', headers=headers)
+	codestyle = requests.utils.get_encodings_from_content(r.text)[0]	#获取网页的实际编码格式
+	r.encoding = codestyle	# 指定正确的编码格式
+	# print(codestyle)
+	webcontent = r.text
+	soup = BeautifulSoup(webcontent, "html.parser")	#转换成html格式
+	xinpi = soup.find('div', class_='art_sheet list')
+	contents = xinpi.find_all('div', style='padding-bottom:5px;padding-left:0px;float:left;')
+	for content in contents:
+		new = content.select('div>a')[0]
+		title = new.get('title')
+		link = new.get('href')
+		print(title, link)
+
+	# --------------红包频道--------------
+	print('-'*20,'红包频道','-'*20)
+	r = requests.get(url=url+'article/cat-3/index.html', headers=headers)
+	codestyle = requests.utils.get_encodings_from_content(r.text)[0]	#获取网页的实际编码格式
+	r.encoding = codestyle	# 指定正确的编码格式
+	# print(codestyle)
+	webcontent = r.text
+	soup = BeautifulSoup(webcontent, "html.parser")	#转换成html格式
+	xinpi = soup.find('div', class_='art_sheet list')
+	contents = xinpi.find_all('div', style='padding-bottom:5px;padding-left:0px;float:left;')
+	for content in contents:
+		new = content.select('div>a')[0]
+		title = new.get('title')
+		link = new.get('href')
+		print(title, link)
+
+	# --------------话费频道--------------
+	print('-'*20,'话费频道','-'*20)
+	r = requests.get(url=url+'article/cat-4/index.html', headers=headers)
+	codestyle = requests.utils.get_encodings_from_content(r.text)[0]	#获取网页的实际编码格式
+	r.encoding = codestyle	# 指定正确的编码格式
+	# print(codestyle)
+	webcontent = r.text
+	soup = BeautifulSoup(webcontent, "html.parser")	#转换成html格式
+	xinpi = soup.find('div', class_='art_sheet list')
+	contents = xinpi.find_all('div', style='padding-bottom:5px;padding-left:0px;float:left;')
+	for content in contents:
+		new = content.select('div>a')[0]
+		title = new.get('title')
+		link = new.get('href')
+		print(title, link)
+
+	# --------------流量频道--------------
+	print('-'*20,'流量频道','-'*20)
+	r = requests.get(url=url+'article/cat-5/index.html', headers=headers)
+	codestyle = requests.utils.get_encodings_from_content(r.text)[0]	#获取网页的实际编码格式
+	r.encoding = codestyle	# 指定正确的编码格式
+	# print(codestyle)
+	webcontent = r.text
+	soup = BeautifulSoup(webcontent, "html.parser")	#转换成html格式
+	xinpi = soup.find('div', class_='art_sheet list')
+	contents = xinpi.find_all('div', style='padding-bottom:5px;padding-left:0px;float:left;')
+	for content in contents:
+		new = content.select('div>a')[0]
+		title = new.get('title')
+		link = new.get('href')
+		print(title, link)
+
 if __name__ == '__main__':
-	traffic()
+	earnews()
