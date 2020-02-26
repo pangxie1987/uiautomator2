@@ -3168,5 +3168,43 @@ def earnews():
 		link = new.get('href')
 		print(title, link)
 
+def maoqiu():
+	'毛球'
+	url = 'http://www.maoqiuapp.com/'
+	datas = {'pageNum':1, 'pageSize':20, 'status':2, 'time':''}
+	r = requests.post(url=url+'v1/dashboard/edit', headers=headers, data=datas)
+	webcontent = r.json()['data']
+	# print(webcontent)
+	for new in webcontent['list']:
+		title = new['title']
+		likeCount = new['likeCount']
+		link = new['shareUrl']
+		print(title, likeCount, link)
+		# print('*'*50)
+
+def cnbeta():
+	'cnbeta'
+	url = 'https://m.cnbeta.com'
+	# --------------业界--------------
+	print('-'*20,'业界','-'*20)
+	r = requests.get(url=url, headers=headers)
+	codestyle = requests.utils.get_encodings_from_content(r.text)[0]	#获取网页的实际编码格式
+	r.encoding = codestyle	# 指定正确的编码格式
+	# print(codestyle)
+	webcontent = r.text
+	soup = BeautifulSoup(webcontent, "html.parser")	#转换成html格式
+	xinpi = soup.find_all('ul', class_='info_list')
+	for block in xinpi:
+		contents = block.find_all('li')
+		#print(contents)
+		for content in contents:
+			new = content.select('li>p>a')
+			if len(new) >0:
+				new = new[0]
+				title = new.select('a>img')[0].get('alt')
+				link = new.get('href')
+				link = url+link
+				print(title, link)
+
 if __name__ == '__main__':
-	earnews()
+	cnbeta()
