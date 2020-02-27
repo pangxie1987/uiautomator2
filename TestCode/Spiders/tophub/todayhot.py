@@ -3206,5 +3206,46 @@ def cnbeta():
 				link = url+link
 				print(title, link)
 
+def webservices():
+	'Web Services接口调用 http://www.webxml.com.cn/zh_cn/web_services.aspx'
+	def mobilecode():
+		'手机号归属地查询'
+		from suds.client import Client
+		url = 'http://ws.webxml.com.cn/WebServices/MobileCodeWS.asmx?wsdl'	#号码归属地
+		client = Client(url)
+		print(client)
+		result = client.service.getMobileCodeInfo('18516292278')
+		print(result)
+
+	def funddata():
+		'基金信息'
+		from suds.client import Client
+		from suds.xsd.doctor import ImportDoctor, Import
+		url = 'http://ws.webxml.com.cn/WebServices/ChinaOpenFundWS.asmx?WSDL'	#开放基金信息
+		imp = Import('http://www.w3.org/2001/XMLSchema', location='http://www.w3.org/2001/XMLSchema.xsd')
+		imp.filter.add('http://WebXml.com.cn/')
+		doctor = ImportDoctor(imp)	# 显示的制定调用标准
+		# client = Client(url, plugins=[ImportDoctor(imp)])
+		client = Client(url, doctor=doctor)
+		print(client)
+		result = client.service.getFundCodeNameDataSet()
+		print(result)
+
+	def weather():
+		'天气查询'
+		from suds.client import Client
+		from suds.xsd.doctor import ImportDoctor, Import
+		url = 'http://ws.webxml.com.cn/WebServices/WeatherWS.asmx?wsdl'	#开放基金信息
+		imp = Import('http://www.w3.org/2001/XMLSchema', location='http://www.w3.org/2001/XMLSchema.xsd')
+		imp.filter.add('http://WebXml.com.cn/')
+		doctor = ImportDoctor(imp)	# 显示的制定调用标准
+		# client = Client(url, plugins=[ImportDoctor(imp)])
+		client = Client(url, doctor=doctor)
+		print(client)
+		result = client.service.getWeather('北京')
+		print(result)
+	# return mobilecode(), funddata(), weather()
+	return weather()
+
 if __name__ == '__main__':
-	cnbeta()
+	webservices()
