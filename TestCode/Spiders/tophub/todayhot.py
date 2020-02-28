@@ -3232,7 +3232,7 @@ def webservices():
 
 	def weather():
 		'天气查询'
-		url = 'http://ws.webxml.com.cn/WebServices/WeatherWS.asmx?wsdl'	#开放基金信息
+		url = 'http://ws.webxml.com.cn/WebServices/WeatherWS.asmx?wsdl'	#天气查询
 		imp = Import('http://www.w3.org/2001/XMLSchema', location='http://www.w3.org/2001/XMLSchema.xsd')
 		imp.filter.add('http://WebXml.com.cn/')
 		doctor = ImportDoctor(imp)	# 显示的制定调用标准
@@ -3241,10 +3241,14 @@ def webservices():
 		print(client)
 		result = client.service.getWeather('北京')
 		print(result)
+		# ======================可以直接用requests库请求======================
+		url2 = 'http://ws.webxml.com.cn/WebServices/WeatherWS.asmx'	#开放基金信息
+		r = requests.get(url2+'/getWeather', params={'theCityCode':'上海', 'theUserID':''})
+		print(r.text)
 
 	def airline():
 		'航班查询'
-		url = 'http://ws.webxml.com.cn/webservices/DomesticAirline.asmx?wsdl'	#开放基金信息
+		url = 'http://ws.webxml.com.cn/webservices/DomesticAirline.asmx?wsdl'	#航班查询
 		imp = Import('http://www.w3.org/2001/XMLSchema', location='http://www.w3.org/2001/XMLSchema.xsd')
 		imp.filter.add('http://WebXml.com.cn/')
 		doctor = ImportDoctor(imp)	# 显示的制定调用标准
@@ -3259,5 +3263,147 @@ def webservices():
 	# return mobilecode(), funddata(), weather(), airline()
 	return airline()
 
+def yicai():
+	'第一财经'
+	url_yicai = 'https://www.yicai.com/news'
+	url = 'https://www.yicai.com/api/ajax/getranklistbykeys'
+	def topnews():
+		'新闻排行榜'
+		r = requests.get(url=url, params={'keys':'newsRank,videoRank,imageRank,liveRank'}, headers=headers)
+		webcontent = r.json()
+		# ======================新闻排行======================
+		newsRank = webcontent['newsRank']
+		print('-'*20,'新闻排行-周','-'*20)
+		for new in newsRank['week']:
+			title = new['NewsTitle']
+			link = url_yicai+new['url']
+			print(title, link)
+		print('-'*20,'新闻排行-月','-'*20)
+		for new in newsRank['month']:
+			title = new['NewsTitle']
+			link = url_yicai+new['url']
+			print(title, link)
+
+		# ======================视频排行======================
+		videoRank = webcontent['videoRank']
+		print('-'*20,'视频排行-周','-'*20)
+		for new in videoRank['week']:
+			title = new['NewsTitle']
+			link = url_yicai+new['url']
+			print(title, link)
+		print('-'*20,'视频排行-月','-'*20)
+		for new in videoRank['month']:
+			title = new['NewsTitle']
+			link = url_yicai+new['url']
+			print(title, link)
+
+		# ======================大直播排行======================
+		liveRank = webcontent['videoRank']
+		print('-'*20,'大直播排行-周','-'*20)
+		for new in liveRank['week']:
+			title = new['NewsTitle']
+			link = url_yicai+new['url']
+			print(title, link)
+		print('-'*20,'大直播排行-月','-'*20)
+		for new in liveRank['month']:
+			title = new['NewsTitle']
+			link = url_yicai+new['url']
+			print(title, link)
+
+		# ======================图集播排行======================
+		imageRank = webcontent['videoRank']
+		print('-'*20,'图集排行-周','-'*20)
+		for new in imageRank['week']:
+			title = new['NewsTitle']
+			link = url_yicai+new['url']
+			print(title, link)
+		print('-'*20,'图集排行-月','-'*20)
+		for new in imageRank['month']:
+			title = new['NewsTitle']
+			link = url_yicai+new['url']
+			print(title, link)
+
+	return topnews()
+
+def caixin():
+	'财新网'
+	url = 'http://www.caixin.com/'
+	r = requests.get(url=url, headers=headers)
+	codestyle = requests.utils.get_encodings_from_content(r.text)[0]	#获取网页的实际编码格式
+	r.encoding = codestyle	# 指定正确的编码格式
+	# print(codestyle)
+	webcontent = r.text
+	soup = BeautifulSoup(webcontent, "html.parser")	#转换成html格式
+	# --------------排行榜--------------
+	print('-'*20,'排行榜','-'*20)
+	xinpi = soup.find('div', class_='top10Con')
+	news = xinpi.find_all('dd')
+	for new in news:
+		title = new.text
+		link = new.select('dd>a')[0].get('href')
+		print(title, link)
+
+	# --------------首页列表--------------
+	print('-'*20,'首页列表','-'*20)
+	xinpi = soup.find('div', class_='news_list')
+	news = xinpi.find_all('dd')
+	# print(news)
+	for new in news:
+		title = new.select('dd>p>a')[0].text
+		link = new.select('dd>p>a')[0].get('href')
+		print(title, link)
+
+def odaily():
+	'星期日报'
+
+	def odaily_page():
+		'从页面获取'
+		url = 'https://www.odaily.com'
+		r = requests.get(url=url, headers=headers)
+		codestyle = requests.utils.get_encodings_from_content(r.text)[0]	#获取网页的实际编码格式
+		r.encoding = codestyle	# 指定正确的编码格式
+		# print(codestyle)
+		webcontent = r.text
+		soup = BeautifulSoup(webcontent, "html.parser")	#转换成html格式
+		# --------------文章热榜-日--------------
+		print('-'*20,'文章热榜-日','-'*20)
+		xinpi = soup.find('div', class_='_2xoas7mT')
+		news = xinpi.find_all('div',class_='_2huHp6uR _2O131UXz _3bQIemFv')
+		# print(news)
+		for new in news:
+			title = new.select('div>a>img')[0].get('alt')
+			link = new.select('div>a')[0].get('href')
+			link = url+link
+			print(title, link)
+
+	def odaily_interface():
+		'从接口获取'
+		url = 'https://www.odaily.com/service/founds/postList'
+		# ======================文章热榜-日======================
+		r = requests.get(url=url, params={'type':'day'}, headers=headers)
+		# print(r.json())
+		webcontent = r.json()['data']
+		newsRank = webcontent['items']
+		print('-'*20,'文章热榜-日','-'*20)
+		for new in newsRank:
+			title = new['title']
+			new_id = new['id']
+			link = 'https://www.odaily.com/post/'+str(new_id)
+			print(title, link)
+
+		# ======================文章热榜-周======================
+		r = requests.get(url=url, params={'type':'week'}, headers=headers)
+		# print(r.json())
+		webcontent = r.json()['data']
+		newsRank = webcontent['items']
+		print('-'*20,'文章热榜-周','-'*20)
+		for new in newsRank:
+			title = new['title']
+			new_id = new['id']
+			link = 'https://www.odaily.com/post/'+str(new_id)
+			print(title, link)
+
+	return odaily_page(), odaily_interface()
+
 if __name__ == '__main__':
-	webservices()
+	odaily()
