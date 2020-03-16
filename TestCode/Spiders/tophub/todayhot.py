@@ -3354,7 +3354,7 @@ def caixin():
 		print(title, link)
 
 def odaily():
-	'星期日报'
+	'星球日报'
 
 	def odaily_page():
 		'从页面获取'

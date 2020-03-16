@@ -47,57 +47,6 @@ def get_xueqiu():
             f.write(str(tid))
             f.write(' '+title+imgurl+'\n\n')
 
-def get_douban_now():
-    '豆瓣-正在上映'
-    url = "https://movie.douban.com/"
-    url2 = "https://movie.douban.com/cinema/nowplaying/shanghai/"
-    t = requests.get(url=url, headers=myheaders)
-    cookie = t.cookies.get_dict()
-    # print(cookie)
-    # print(t.text)
-    tid = 0
-    # 请求数据
-    t = requests.get(url=url2, headers=myheaders, cookies=cookie)
-    #print(t.text)
-    content = etree.HTML(t.text)
-    print(content)
-    movies = content.xpath('//div[@id="nowplaying"]/div/ul[@class="lists"]/li')
-    with open(file,'a+') as f:
-        f.write('*'*20+'正在上映'+'*'*20+'\n\n')
-        for ss in movies:
-            tid = int(tid)+1
-            data = ss.attrib
-            name = data['data-title']   #电影名
-            score = data['data-score']  #IMDB评分
-            actors = data['data-actors']    #主演
-            print(name)
-            f.write(str(tid))
-            f.write(' '+name+'\t'+score+'\t'+actors+'\n\n')
-
-def get_douban_later():
-    '豆瓣-即将上映'
-    url = "https://movie.douban.com/"
-    url2 = "https://movie.douban.com/cinema/nowplaying/shanghai/"
-    t = requests.get(url=url, headers=myheaders)
-    cookie = t.cookies.get_dict()
-    tid = 0
-    # 请求数据
-    t = requests.get(url=url2, headers=myheaders, cookies=cookie)
-    content = etree.HTML(t.text)
-    movies = content.xpath('//div[@id="upcoming"]/div/ul[@class="lists"]/li')
-    with open(file,'a+') as f:
-        f.write('*'*20+'即将上映'+'*'*20+'\n\n')
-        for ss in movies:
-            tid = int(tid)+1
-            data = ss.attrib
-            name = data['data-title']   #电影名
-            region = data['data-region']  #产地
-            director = data['data-director'] #导演
-            actors = data['data-actors']    #主演
-            print(name)
-            f.write(str(tid))
-            f.write(' '+name+'\t'+region+'\t'+director+'\t'+actors+'\n\n')
-
 def get_stcn_news():
     '证券时报-要闻'
     url = "http://news.stcn.com/"
