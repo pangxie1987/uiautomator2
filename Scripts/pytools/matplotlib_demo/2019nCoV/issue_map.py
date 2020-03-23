@@ -1,6 +1,9 @@
 '''
+matplotlib、basemap
 python实现新冠疫情地图
 参考：https://blog.csdn.net/xufive/article/details/104093197
+解决No module named 'mpl_toolkits.basemap'问题
+https://blog.csdn.net/weixin_34026276/article/details/92444192
 '''
 import requests
 import time
