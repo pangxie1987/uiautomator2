@@ -1,9 +1,14 @@
 '''
 matplotlib、basemap
 python实现新冠疫情地图
+
 参考：https://blog.csdn.net/xufive/article/details/104093197
 解决No module named 'mpl_toolkits.basemap'问题
-https://blog.csdn.net/weixin_34026276/article/details/92444192
+安装pyproj(cp36表示python36版本)与basemap
+https://www.lfd.uci.edu/~gohlke/pythonlibs/
+
+SystemError: execution of module _geoslib raised unreported exception
+我用pip install --user --upgrade numpy解决了
 '''
 import requests
 import time
@@ -16,7 +21,7 @@ from matplotlib.font_manager import FontProperties
 from matplotlib.backends.backend_agg import FigureCanvasAgg
 from matplotlib.patches import Polygon
 from matplotlib.collections import PatchCollection
-from mpl_toolkits.basemap import Basemao
+from mpl_toolkits.basemap import Basemap
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 
@@ -49,10 +54,11 @@ def catch_distribution():
 	url = 'https://view.inews.qq.com/g2/getOnsInfo?name=disease_h5&callback=&_=%d'%int(time.time()*1000)
 	r = requests.get(url=url)
 	response = json.loads(r.json()['data'])['areaTree'][0]['children']
-	if item['name'] not in data:
-		data.update({item['name']:0})
-	for city_data in item['children']:
-		data[item['name']] += int(city_data['total'])['confirm']
+	for item in response:
+		if item['name'] not in data:
+			data.update({item['name']:0})
+		for city_data in item['children']:
+			data[item['name']] += int(city_data['total']['confirm'])
 
 	return data
 
@@ -74,7 +80,7 @@ def plot_daily():
 	plt.grid(linestyle=':')		# 显示网格
 	plt.legend(loc='best')		# 显示图例
 	plt.savefig('2019-noCov疫情曲线.png')	# 保存为文件
-	# plt.show()
+	plt.show()
 
 def plot_distribution():
 	'绘制行政区域确诊分布数据'
@@ -148,7 +154,7 @@ def plot_distribution():
 	}
 
 	fig = matplotlib.figure.Figure()
-	fig.set_size_inches(width/100, heigth/100)	# 设置绘图板尺寸
+	fig.set_size_inches(width/100, height/100)	# 设置绘图板尺寸
 	axes = fig.add_axes(rect)
 
 	# 兰博托投影模式，局部
@@ -176,7 +182,7 @@ def plot_distribution():
 					color = '#ffaa85'
 				elif data[key] < 100:
 					color = '#ff7b69'
-				elif datta[key] < 1000:
+				elif data[key] < 1000:
 					color = '#bf2121'
 				else:
 					color = '#7f1818'
