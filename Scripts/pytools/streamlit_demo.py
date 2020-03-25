@@ -7,6 +7,9 @@ https://zhuanlan.zhihu.com/p/110816628?from_voters_page=true
 安装： pip install streamlit
 启动
 streamlit run app_name.py
+
+中文学习手册
+http://cw.hubwiz.com/card/c/streamlit-manual/
 '''
 
 import streamlit as st
@@ -39,3 +42,17 @@ st.json({
 		},
 	"phone":[1,2,3,4]
 })
+
+# 显示地图
+df = pd.DataFrame(
+	np.random.randn(1000, 2) / [50, 50] + [37.76, -122.4],
+	columns=['lat', 'lon'])
+st.map(df)
+
+# # 显示视频播放器
+# video_file = open('video.mp4', 'rb')
+# video_bytes = video_file.read()
+# st.video(video_bytes)
+
+# 显示庆祝气球
+st.balloons()
