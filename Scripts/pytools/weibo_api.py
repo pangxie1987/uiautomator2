@@ -11,28 +11,37 @@ import requests
 
 
 app_key = '1841398159'
-app_secret = '15f0f548f1793e6a0eac105a8264ab4'
+app_secret = '9ff061953885bcc57b948c57e9cbab35'
 code = 'd9afe1b4e3afa6a20e70e254df4d75b2'
 redirect_uri = 'https://www.sina.com.cn'
+# redirect_uri = 'http://api.weibo.com/oauth2/default.html'
 
 authorize_url = 'https://api.weibo.com/oauth2/authorize'
 token_url = 'https://api.weibo.com/oauth2/access_token'
 
-'''授权-目前代码无法获取，使用浏览器获取code'''
-# datas = {'client_id':'1841398159', 'redirect_uri':'https://api.weibo.com/oauth2/default.html', 'response_type':'code'}
-# url = 'https://api.weibo.com/oauth2/authorize?client_id=1841398159&redirect_uri=https://www.sina.com.cn&response_type=code'
-# r = requests.get(url=url)
-# print(r.url)
-# print(r.text)
+def get_ticket():
 
-'''授权后获取access_token'''
-token_ploy = {
-		'client_id':app_key, 
-		'client_secret':app_secret, 
-		'grant_type':'authorization_code', 
-		'code':code, 
-		'redirect_uri':redirect_uri
-		}
-token_response = requests.post(url=token_url, params=token_ploy)
-print(token_response.url)
-print(token_response.text)
+	'''授权-目前代码无法获取，使用浏览器获取code'''
+	url1 = 'https://api.weibo.com/oauth2/authorize?client_id={client_id}&redirect_uri={redirect_url}'.format(client_id = app_key,redirect_url = redirect_uri)
+	r = requests.get(url=url1)
+	print(r.url)
+	print(r.text)
+
+def get_token():
+	'''授权后获取access_token'''
+	token_ploy = {
+			'client_id':app_key, 
+			'client_secret':app_secret, 
+			'grant_type':'authorization_code', 
+			'code':code, 
+			'redirect_uri':redirect_uri
+			}
+
+	url2 = "https://api.weibo.com/oauth2/access_token?client_id={client_id}&client_secret={client_secret}&grant_type=authorization_code&redirect_uri={redirect_url}&code={code}".format(client_id = app_key,client_secret = app_secret,redirect_url = redirect_uri,code = code)
+	token_response = requests.post(url=url2)
+	print(token_response.url)
+	print(token_response.text)
+
+if __name__ == '__main__':
+	# get_ticket()
+	get_token()
