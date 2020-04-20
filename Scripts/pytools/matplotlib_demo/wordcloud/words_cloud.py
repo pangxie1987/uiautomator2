@@ -6,6 +6,13 @@ from __future__ import division
 可视化学习：https://blog.csdn.net/Together_CZ/article/details/92764128
 功能： 词云的可视化模块
 '''
+'''
+python词云库
+pyecharts：https://pyecharts.org/#/zh-cn/basic_charts?id=wordcloud%ef%bc%9a%e8%af%8d%e4%ba%91%e5%9b%be
+wordcloud
+stylecloud
+
+'''
 
 import os
 import sys
