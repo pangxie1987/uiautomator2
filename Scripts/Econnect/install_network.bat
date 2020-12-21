@@ -1,0 +1,1 @@
+pyinstaller -F network_login.py
