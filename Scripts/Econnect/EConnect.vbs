@@ -7,7 +7,7 @@ set oexec=Wshell.Exec(program)
 wscript.Sleep 5000
 Wshell.AppActivate "SangforCSClient.exe"
 wscript.Sleep 1000
-Wshell.SendKeys "autotest5"		'修改为自己用户名
+Wshell.SendKeys "liupb"		'修改为自己用户名
 wscript.Sleep 200
 Wshell.SendKeys "+{TAB}"
 wscript.Sleep 200
@@ -15,7 +15,7 @@ Wshell.SendKeys "+{TAB}"
 'wscript.Sleep 200
 'Wshell.SendKeys "+{TAB}"
 wscript.Sleep 200
-Wshell.SendKeys "liupb123456#"	 '修改为自己密码
+Wshell.SendKeys "Asdfg@123456"	 '修改为自己密码
 wscript.Sleep 200
 Wshell.SendKeys "{ENTER}"
 '保存为VBS文件运行ECAgent.exe
