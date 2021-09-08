@@ -1,5 +1,5 @@
 pyperclip==1.7.0
 pywin32==224
 pyautogui==0.9.44
-pillow==5.3.0
+pillow==8.3.2
 pywinauto==0.6.6
